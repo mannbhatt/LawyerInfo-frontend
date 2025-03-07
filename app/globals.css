@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: #591b0c !important;
+}
+
+.swiper {
+  padding: 20px 40px !important;
+}
+
+@media (max-width: 640px) {
+  .swiper {
+    padding: 20px 20px !important;
+  }
+}
