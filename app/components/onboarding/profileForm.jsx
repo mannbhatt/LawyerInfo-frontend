@@ -1,14 +1,16 @@
 "use client";
 import React, { useState, useEffect } from "react";
-
-import { useDropzone } from "react-dropzone"; // For drag & drop functionality
+import { useToast } from "../ui/toast"; // Import useToast hook for toast notifications
+import { User, Phone,Calendar, Mail, Image,MapPin, Key, Info} from "lucide-react"; // Importing icons from lucide-react
 import Imgupload from "../imgupload";
+import { jwtDecode } from "jwt-decode"
 const ProfileForm = ({ nextStep, userId }) => {
   const [profileData, setProfileData] = useState({
     userId: userId,
     firstName: "",
     lastName: "",
     fullName: "",
+    
     email: "",
     phone: "",
     dateOfBirth: "",
@@ -16,6 +18,7 @@ const ProfileForm = ({ nextStep, userId }) => {
     profileImage: "",
     imageKey:"",
     bio: "",
+    city:"",
   });
 
   const [errors, setErrors] = useState({});
@@ -24,39 +27,28 @@ const ProfileForm = ({ nextStep, userId }) => {
   const [uploadedImage, setUploadedImage] = useState("");
   const [imageUploadWarning, setImageUploadWarning] = useState(""); // Added to store image upload warning
   const [imageKey,setImageKey]=useState("");
+  const { success, error } = useToast(); // Destructure success and error from useToast hook
+
   useEffect(() => {
-    if (userId) {
-      setProfileData((prev) => ({ ...prev, userId }));
-      fetchUserEmail();
+    const token = localStorage.getItem("authToken")
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token)
+        
+        setProfileData((prev) => ({ ...prev, email: decodedToken.email }));
+        setLoading(false);
+    
+      } catch (error) {
+        console.error("Invalid token:")
+      }
     }
-  }, [userId]);
+  }, [])
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProfileData((prev) => ({ ...prev, [name]: value }));
   };
-  const fetchUserEmail = async () => {
-    try {
-      const token = localStorage.getItem("authToken");
-      if (!token) throw new Error("User not authenticated");
-
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setProfileData((prev) => ({ ...prev, email: data.email }));
-      } else {
-        console.error("Failed to fetch email");
-      }
-    } catch (error) {
-      console.error("Error fetching email:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 📌 Handle file upload via input or drag-and-drop
+ 
   
 
   
@@ -69,15 +61,14 @@ const ProfileForm = ({ nextStep, userId }) => {
       setImageUploadWarning(""); // Clear the warning if image is uploaded
     }
     if (!imageKey) {
-      setImageUploadWarning("Image  is required. Please upload an image.");
+      setImageUploadWarning("Image key is required. Please upload an image.");
       return;
     } else {
       setImageUploadWarning(""); // Clear the warning if image key is uploaded
     }
     const token = localStorage.getItem("authToken");
     if (!token) throw new Error("User not authenticated");
-    console.log(token);
-
+    
     if (Object.values(errors).some((error) => error)) return;
 
     const fullName = `${profileData.firstName} ${profileData.lastName}`.trim();
@@ -92,6 +83,7 @@ const ProfileForm = ({ nextStep, userId }) => {
       profileImage: uploadedImage,
       imageKey:imageKey,
       bio: profileData.bio,
+      city:profileData.city,
     };
 
     try {
@@ -106,11 +98,14 @@ const ProfileForm = ({ nextStep, userId }) => {
 
       if (response.ok) {
         nextStep();
+        success("Profile created successfully!"); // Added toast notification for success
       } else {
         console.error("Profile creation failed");
+        error("Failed to create profile."); // Added toast notification for error
       }
     } catch (error) {
       console.error("Error submitting form:", error);
+      error("An error occurred. Please try again."); // Added toast notification for error
     }
   };
 
@@ -129,7 +124,9 @@ const ProfileForm = ({ nextStep, userId }) => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700">First Name</label>
+              <label className="flex text-sm font-medium text-gray-700">
+                <User size={16} className="text-[#591B0C]" /> First Name
+              </label>
               <input
                 type="text"
                 name="firstName"
@@ -142,7 +139,9 @@ const ProfileForm = ({ nextStep, userId }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Last Name</label>
+              <label className="flex text-sm font-medium text-gray-700">
+                <User size={16} className="text-[#591B0C]" /> Last Name
+              </label>
               <input
                 type="text"
                 name="lastName"
@@ -155,7 +154,9 @@ const ProfileForm = ({ nextStep, userId }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Email (Auto-filled)</label>
+              <label className="flex text-sm font-medium text-gray-700">
+              <Mail className="w-4 h-4 mr-1 text-[#591B0C]" /> Email (Auto-filled)
+              </label>
               <input
                 type="email"
                 name="email"
@@ -166,7 +167,9 @@ const ProfileForm = ({ nextStep, userId }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Phone</label>
+              <label className="flex text-sm font-medium text-gray-700">
+                <Phone size={16} className="text-[#591B0C]" /> Phone
+              </label>
               <input
                 type="tel"
                 name="phone"
@@ -179,7 +182,9 @@ const ProfileForm = ({ nextStep, userId }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Date of Birth</label>
+              <label className="flex text-sm font-medium text-gray-700">
+                <Calendar size={16} className="text-[#591B0C]" /> Date of Birth
+              </label>
               <input
                 type="date"
                 name="dateOfBirth"
@@ -191,7 +196,9 @@ const ProfileForm = ({ nextStep, userId }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Gender</label>
+              <label className="flex text-sm font-medium text-gray-700">
+              <User className="w-4 h-4 mr-1 text-[#591B0C]" /> Gender
+              </label>
               <select
                 name="gender"
                 value={profileData.gender}
@@ -208,12 +215,16 @@ const ProfileForm = ({ nextStep, userId }) => {
          
           
             <div className="">
-              <label className="block text-sm   font-medium text-gray-700">Profile Image</label>
+              <label className="flex text-sm   font-medium text-gray-700">
+                <Image size={16} className="text-[#591B0C]" /> Profile Image
+              </label>
               <Imgupload onUploadComplete={setUploadedImage} onImageKeyChange={setImageKey}/>
               {imageUploadWarning && <p className="text-sm text-red-600">{imageUploadWarning}</p>}
             </div>
             <div className="">
-              <label className="block text-sm font-medium text-gray-700">Bio</label>
+              <label className="flex text-sm font-medium text-gray-700  items-center gap-2">
+                <Info className="w-4 h-4 text-[#591B0C]" /> Bio
+              </label>
               <textarea
                 name="bio"
                 value={profileData.bio}
@@ -222,8 +233,23 @@ const ProfileForm = ({ nextStep, userId }) => {
                 className="mt-1 block w-full h-48 border-[#591B0C] border-2 shadow-sm  focus:border-[#ff3003] outline-none sm:text-sm"
               />
               {errors.bio && <p className="mt-1 text-sm text-red-600">{errors.bio}</p>}
+            
+            </div></div>
+            <div>
+              <label className="flex text-sm font-medium text-gray-700">
+                <MapPin size={16} className="text-[#591B0C]" /> City
+              </label>
+              <input
+                type="text"
+                name="city"
+                value={profileData.city}
+                onChange={handleInputChange}
+                className="mt-1 block w-full border-[#591B0C] border-2 focus:border-[#ff3003] outline-none"
+                required
+              />
+              {errors.firstName && <p className="text-sm text-red-600">{errors.firstName}</p>}
             </div>
-          </div>
+          
           <div className="flex justify-end mt-8">
             
             <button type="submit" className="px-6 py-2 bg-[#591B0C] hover:bg-[#ff3003] text-white">

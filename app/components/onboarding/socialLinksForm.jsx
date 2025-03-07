@@ -146,7 +146,6 @@ const SocialLinksForm = ({ nextStep, thisStep, skipStep, userId }) => {
       if (response.ok) {
         alert("Social links updated successfully!");
         if (redirectAfterSubmit) {
-          nextStep();
           window.location.href = "/";
         } else {
           thisStep();
@@ -161,9 +160,7 @@ const SocialLinksForm = ({ nextStep, thisStep, skipStep, userId }) => {
     setLoading(false);
   };
   const handleSkip = () => {
-    skipStep();
-
-    window.location.href = "/dashboard"; 
+    window.location.href = "/"; 
   };
   return (
     <div className="max-w-4xl mx-auto p-8 bg-white shadow-lg border border-gray-200">

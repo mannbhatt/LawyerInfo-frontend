@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import 'tailwindcss/tailwind.css';
+import { useToast } from "../ui/toast"; // Import useToast hook for toast notifications
+import { Briefcase, Calendar, FileText, Tag } from "lucide-react"; // Import icons from lucide-react
 
 const ContributionForm = ({ nextStep, thisStep, skipStep, userId }) => {
   const [contributionData, setContributionData] = useState({
@@ -14,6 +16,7 @@ const ContributionForm = ({ nextStep, thisStep, skipStep, userId }) => {
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const { success, error } = useToast(); // Destructure success and error from useToast hook
 
   const handleInputChange = (e) => {
     setContributionData({ ...contributionData, [e.target.name]: e.target.value });
@@ -36,11 +39,14 @@ const ContributionForm = ({ nextStep, thisStep, skipStep, userId }) => {
   };
 
   const submitContributionData = async (redirectAfterSubmit) => {
-    if (!validateForm()) return;
+    if (!validateForm()){
+      error("Please fix the errors in the form")
+      return}
 
     const token = localStorage.getItem("authToken");
     if (!token) {
       console.error("No token found. User might not be logged in.");
+      error("No token found. User might not be logged in.");
       return;
     }
 
@@ -57,8 +63,7 @@ const ContributionForm = ({ nextStep, thisStep, skipStep, userId }) => {
 
       const data = await response.json();
       if (response.ok) {
-        alert("Contribution added successfully!");
-        
+        success("Contribution added successfully!"); // Added toast notification for success
         if (redirectAfterSubmit) {
           nextStep();
         } else {
@@ -66,11 +71,11 @@ const ContributionForm = ({ nextStep, thisStep, skipStep, userId }) => {
           thisStep();
         }
       } else {
-        alert(data.message || "Failed to add contribution.");
+        error(data.message || "Failed to add contribution."); // Added toast notification for error
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("An error occurred. Please try again.");
+      error("An error occurred. Please try again."); // Added toast notification for error
     }
     setLoading(false);
   };
@@ -87,58 +92,68 @@ const ContributionForm = ({ nextStep, thisStep, skipStep, userId }) => {
       <form className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Title</label>
-          <input
-            type="text"
-            name="title"
-            value={contributionData.title}
-            onChange={handleInputChange}
-            className="mt-1 block w-full h-9 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] outline-none sm:text-sm"
-            required
-          />
+          <label className="block text-sm font-medium text-gray-700  items-center">
+            <Briefcase className="h-5 w-5 mr-2 text-[#591B0C]" /> Title
+            </label><input
+              type="text"
+              name="title"
+              value={contributionData.title}
+              onChange={handleInputChange}
+              className="mt-1 block w-full h-9 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] outline-none sm:text-sm"
+              required
+            />
+          
           {errors.title && <p className="mt-1 text-sm text-red-600">{errors.title}</p>}
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Category</label>
-          <select
-            name="category"
-            value={contributionData.category}
-            onChange={handleInputChange}
-            className="mt-1 block w-full h-9 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] outline-none sm:text-sm"
-          >
-            <option value="Blog">Blog</option>
-            <option value="Research Paper">Research Paper</option>
-            <option value="Project">Project</option>
-            <option value="Design">Design</option>
-            <option value="Other">Other</option>
-          </select>
+          <label className="block text-sm font-medium text-gray-700  items-center">
+            <Tag className="h-5 w-5 mr-2 text-[#591B0C]" /> Category
+            </label>
+            <select
+              name="category"
+              value={contributionData.category}
+              onChange={handleInputChange}
+              className="mt-1 block w-full h-9 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] outline-none sm:text-sm"
+            >
+              <option value="Blog">Blog</option>
+              <option value="Research Paper">Research Paper</option>
+              <option value="Project">Project</option>
+              <option value="Design">Design</option>
+              <option value="Other">Other</option>
+            </select>
+         
           {errors.category && <p className="mt-1 text-sm text-red-600">{errors.category}</p>}
         </div>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Description</label>
-          <textarea
-            name="description"
-            value={contributionData.description}
-            onChange={handleInputChange}
-            className="mt-1 block w-full h-20 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] outline-none sm:text-sm"
-            required
-          ></textarea>
+          <label className="block text-sm font-medium text-gray-700  items-center">
+            <FileText className="h-5 w-5 mr-2 text-[#591B0C]" /> Description
+            </label>
+            <textarea
+              name="description"
+              value={contributionData.description}
+              onChange={handleInputChange}
+              className="mt-1 block w-full h-20 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] outline-none sm:text-sm"
+              required
+            ></textarea>
+          
           {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description}</p>}
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700">External Link (Optional)</label>
-          <input
-            type="url"
-            name="external_link"
-            value={contributionData.external_link}
-            onChange={handleInputChange}
-            className="mt-1 block w-full h-9 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] outline-none sm:text-sm"
-          />
+          <label className="block text-sm font-medium text-gray-700  items-center">
+            <Calendar className="h-5 w-5 mr-2 text-[#591B0C]" /> External Link (Optional)
+            </label><input
+              type="url"
+              name="external_link"
+              value={contributionData.external_link}
+              onChange={handleInputChange}
+              className="mt-1 block w-full h-9 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] outline-none sm:text-sm"
+            />
+          
           {errors.external_link && <p className="mt-1 text-sm text-red-600">{errors.external_link}</p>}
         </div>
-        <div className=" flex justify-between mt-8">
+        <div className="flex justify-between mt-8">
           <button
             type="button"
             onClick={skipStep}

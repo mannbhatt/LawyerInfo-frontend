@@ -34,7 +34,7 @@ export default function Imgupload({ onUploadComplete, onImageKeyChange }) {
   };
 
   return (
-    <div className="focus:border-[#ff3003] outline-none mt-1 flex flex-col  justify-left items-center gap-2  border-[#591B0C] border-2 bg-white shadow-sm rounded-md w-full">
+    <div className="focus:border-[#ff3003] h-48 outline-none mt-1 flex flex-col  justify-left items-center gap-2  border-[#591B0C] border-2 bg-white shadow-sm rounded-md w-full">
 
       
       {!imageUrl && (

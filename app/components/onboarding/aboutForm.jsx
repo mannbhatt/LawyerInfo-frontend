@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import 'tailwindcss/tailwind.css';
-
+import { useToast } from "../ui/toast"
+import { User, Star, Heart, Globe,FileText } from "lucide-react"; // Importing icons from lucide-react
 const AboutForm = ({ nextStep, thisStep, skipStep, userId }) => {
   const [aboutData, setAboutData] = useState({
     user_id: userId,
@@ -14,7 +15,7 @@ const AboutForm = ({ nextStep, thisStep, skipStep, userId }) => {
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-
+  const { success, error } = useToast()
   const handleInputChange = (e) => {
     setAboutData({ ...aboutData, [e.target.name]: e.target.value });
   };
@@ -36,10 +37,13 @@ const AboutForm = ({ nextStep, thisStep, skipStep, userId }) => {
   };
 
   const submitAboutData = async (redirectAfterSubmit) => {
-    if (!validateForm()) return;
+    if (!validateForm()) {
+      error("Please fix the errors in the form")
+      return};
 
     const token = localStorage.getItem("authToken");
     if (!token) {
+      error("No token found. User might not be logged in.")
       console.error("No token found. User might not be logged in.");
       return;
     }
@@ -57,7 +61,8 @@ const AboutForm = ({ nextStep, thisStep, skipStep, userId }) => {
 
       const data = await response.json();
       if (response.ok) {
-        alert("About information added successfully!");
+        success("about data added successfully!")
+
         
         if (redirectAfterSubmit) {
           nextStep();
@@ -72,11 +77,11 @@ const AboutForm = ({ nextStep, thisStep, skipStep, userId }) => {
           thisStep();
         }
       } else {
-        alert(data.message || "Failed to save about information.");
+        error(data.message || "Failed to save about information.");
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("An error occurred. Please try again.");
+      error("An error occurred. Please try again.");
     }
     setLoading(false);
   };
@@ -94,57 +99,57 @@ const AboutForm = ({ nextStep, thisStep, skipStep, userId }) => {
       <form className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Summary
-            <textarea
+            <FileText size={16} className="text-[#591B0C]"/> Summary
+            </label> <textarea
               name="summary"
               value={aboutData.summary}
               onChange={handleInputChange}
-              className="mt-1 block w-full h-20 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] outline-none sm:text-sm"
+              className="mt-1 block w-full h-20 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] outline-none sm:text-sm text-[#591B0C]"
               required
             />
-          </label>
+         
           {errors.summary && <p className="mt-1 text-sm text-red-600">{errors.summary}</p>}
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Highlights (comma-separated)
-            <input
+            <Star size={16} className="text-[#591B0C]"/> Highlights (comma-separated)
+            </label> <input
               type="text"
               name="highlights"
               value={aboutData.highlights.join(",")}
               onChange={(e) => handleArrayChange(e, "highlights")}
               className="mt-1 block w-full h-9 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] outline-none sm:text-sm"
             />
-          </label>
+          
           
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Hobbies (comma-separated)
-            <input
+            <Heart size={16} className="text-[#591B0C]"/> Hobbies (comma-separated)
+            </label> <input
               type="text"
               name="hobbies"
               value={aboutData.hobbies.join(",")}
               onChange={(e) => handleArrayChange(e, "hobbies")}
               className="mt-1 block w-full h-9 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] outline-none sm:text-sm"
             />
-          </label>
+         
          
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Personal Website
-            <input
+            <Globe size={16} className="text-[#591B0C]"/> Personal Website
+            </label> <input
               type="url"
               name="personal_website"
               value={aboutData.personal_website}
               onChange={handleInputChange}
               className="mt-1 block w-full h-9 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] outline-none sm:text-sm"
             />
-          </label>
+          
           {errors.personal_website && <p className="mt-1 text-sm text-red-600">{errors.personal_website}</p>}
         </div>
 

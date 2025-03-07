@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import 'tailwindcss/tailwind.css';
+import { useToast } from "../ui/toast"
 import Imgupload from "../imgupload";
+import { Briefcase, Calendar, Building, FileText } from "lucide-react"; // Import icons from lucide-react
 const AchievementForm = ({ nextStep, thisStep, skipStep, userId }) => {
   const [certificationData, setCertificationData] = useState({
     user_id: userId,
@@ -19,7 +21,8 @@ const AchievementForm = ({ nextStep, thisStep, skipStep, userId }) => {
   const [uploadedImage, setUploadedImage] = useState("");
   const [imageUploadWarning, setImageUploadWarning] = useState(""); // Added to store image upload warning
   const [imageKey,setImageKey]=useState("");
- 
+  const { success, error } = useToast(); // Added to use toast notifications
+
   const handleInputChange = (e) => {
     setCertificationData({ ...certificationData, [e.target.name]: e.target.value });
   };
@@ -36,13 +39,13 @@ const AchievementForm = ({ nextStep, thisStep, skipStep, userId }) => {
   const submitCertificationData = async (redirectAfterSubmit) => {
     if (!validateForm()) return;
     if (!uploadedImage) {
-      setImageUploadWarning("Cirtificate image is required. Please upload an image.");
+      setImageUploadWarning("Certificate image is required. Please upload an image.");
       return;
     } else {
       setImageUploadWarning(""); // Clear the warning if image is uploaded
     }
     if (!imageKey) {
-      setImageUploadWarning("Image  is required. Please upload an image.");
+      setImageUploadWarning("Image key is required. Please upload an image.");
       return;
     } else {
       setImageUploadWarning(""); // Clear the warning if image key is uploaded
@@ -75,7 +78,7 @@ const AchievementForm = ({ nextStep, thisStep, skipStep, userId }) => {
 
       const data = await response.json();
       if (response.ok) {
-        alert("Certification added successfully!");
+        success("Certification added successfully!"); // Added toast notification for success
         if (redirectAfterSubmit) {
           nextStep();
         } else {
@@ -92,11 +95,11 @@ const AchievementForm = ({ nextStep, thisStep, skipStep, userId }) => {
           thisStep();
         }
       } else {
-        alert(data.message || "Failed to add certification.");
+        error(data.message || "Failed to add certification."); // Added toast notification for error
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("An error occurred. Please try again.");
+      error("An error occurred. Please try again."); // Added toast notification for error
     }
     setLoading(false);
   };
@@ -117,15 +120,17 @@ const AchievementForm = ({ nextStep, thisStep, skipStep, userId }) => {
          
         
         <div className="">
-              <label className="block text-sm   font-medium text-gray-700">Profile Image</label>
+              <label className="block text-sm   font-medium text-gray-700  items-center">
+                <Building className="h-5 w-5 mr-2 text-[#591B0C]" /> Profile Image
+              </label>
               <Imgupload onUploadComplete={setUploadedImage} onImageKeyChange={setImageKey}/>
               {imageUploadWarning && <p className="text-sm text-red-600">{imageUploadWarning}</p>}
             </div>
         <div className="flex flex-col justify-between">
         <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Certificate Name
-            <input
+          <label className="block text-sm font-medium text-gray-700  items-center">
+            <Briefcase className="h-5 w-5 mr-2 text-[#591B0C]" /> Certificate Name
+            </label><input
               type="text"
               name="certificate_name"
               value={certificationData.certificate_name}
@@ -133,13 +138,13 @@ const AchievementForm = ({ nextStep, thisStep, skipStep, userId }) => {
               className="mt-1 block w-full h-9  border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] outline-none sm:text-sm"
               required
             />
-          </label>
+         
           {errors.certificate_name && <p className="text-sm text-red-600">{errors.certificate_name}</p>}
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Issuing Organization
-            <input
+          <label className="block text-sm font-medium text-gray-700  items-center">
+            <Building className="h-5 w-5 mr-2 text-[#591B0C]" /> Issuing Organization
+            </label>  <input
               type="text"
               name="issuing_organization"
               value={certificationData.issuing_organization}
@@ -147,13 +152,13 @@ const AchievementForm = ({ nextStep, thisStep, skipStep, userId }) => {
               className="mt-1 block w-full h-9  border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] outline-none sm:text-sm"
               required
             />
-          </label>
+         
           {errors.issuing_organization && <p className="text-sm text-red-600">{errors.issuing_organization}</p>}
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Issue Date
-            <input
+          <label className="block text-sm font-medium text-gray-700  items-center">
+            <Calendar className="h-5 w-5 mr-2 text-[#591B0C]" /> Issue Date
+            </label>   <input
               type="date"
               name="issue_date"
               value={certificationData.issue_date}
@@ -161,7 +166,7 @@ const AchievementForm = ({ nextStep, thisStep, skipStep, userId }) => {
               className="mt-1 block w-full h-9  border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] outline-none sm:text-sm"
               required
             />
-          </label>
+         
           {errors.issue_date && <p className="text-sm text-red-600">{errors.issue_date}</p>}
         </div>
           
@@ -170,16 +175,16 @@ const AchievementForm = ({ nextStep, thisStep, skipStep, userId }) => {
         </div>
         </div>
         <div>
-        <label className="block text-sm font-medium text-gray-700">
-            Credential URL (optional)
-            <input
+        <label className="block text-sm font-medium text-gray-700  items-center">
+            <FileText className="h-5 w-5 mr-2" /> Credential URL (optional)
+            </label><input
               type="text"
               name="credential_url"
               value={certificationData.credential_url}
               onChange={handleInputChange}
               className="mt-1 block w-full h-9  border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] outline-none sm:text-sm"
             />
-          </label>
+         
           </div>
         
         <div className="flex justify-between">

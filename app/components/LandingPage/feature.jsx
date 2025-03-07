@@ -1,74 +1,77 @@
-'use client';
-import { UserCircleIcon, EyeIcon, UsersIcon } from '@heroicons/react/24/outline';
-import { motion } from 'framer-motion';
+"use client"
+
+import { motion } from "framer-motion"
+import { UserCircle, Eye, Users } from "lucide-react"
 
 const Features = () => {
   const features = [
     {
-      icon: <UserCircleIcon className="w-12 h-12 text-white" />,
+      icon: <UserCircle className="w-10 h-10 text-white" />,
       title: "Profile Customization",
-      description: "Create a unique professional identity with customizable profile options and personal branding tools."
+      description:
+        "Create a unique professional identity with customizable profile options and personal branding tools.",
     },
     {
-      icon: <EyeIcon className="w-12 h-12 text-white" />,
-      title: "Visibility Control", 
-      description: "Manage your online presence with advanced privacy settings and selective information sharing."
+      icon: <Eye className="w-10 h-10 text-white" />,
+      title: "Visibility Control",
+      description: "Manage your online presence with advanced privacy settings and selective information sharing.",
     },
     {
-      icon: <UsersIcon className="w-12 h-12 text-white" />,
+      icon: <Users className="w-10 h-10 text-white" />,
       title: "Professional Networking",
-      description: "Connect with industry peers, join communities, and expand your professional network effortlessly."
-    }
-  ];
+      description: "Connect with industry peers, join communities, and expand your professional network effortlessly.",
+    },
+  ]
 
   return (
-    <section className="py-16 bg-white" id='feature'>
+    <section className="py-20  bg-white" id="feature">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-12"
+          viewport={{ once: true }}
+          className="text-center mb-16"
         >
-          <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
+          <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl lg:text-5xl">
             Powerful Features for Professionals
           </h2>
-          <p className="mt-4 text-lg text-gray-600">
-            Everything you need to build your professional presence online
+          <div className="w-24 h-1 bg-primary mx-auto mt-0 mb-2"></div>
+          <p className="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
+            Everything you need to build your professional presence online and connect with the right people
           </p>
         </motion.div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
           {features.map((feature, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: index * 0.3 }}
-              whileHover={{ 
-                scale: 1.05,
-                boxShadow: "0 10px 30px rgba(0,0,0,0.2)"
+              transition={{ duration: 0.7, delay: index * 0.2 }}
+              viewport={{ once: true }}
+              whileHover={{
+                y: -10,
+                boxShadow: "0 15px 30px rgba(89, 27, 12, 0.2)",
               }}
-              className="p-6 bg-[#591B0C] rounded-lg shadow-md"
+              className="p-8 bg-gradient-to-br from-primary to-primary-light shadow-custom overflow-hidden relative group"
             >
-              <div 
-                className="mb-4 transform transition-transform duration-500 hover:rotate-12"
-                
-              >
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 transition-transform duration-700 group-hover:scale-150"></div>
+
+              <div className="mb-6 p-4 bg-white/10 rounded-full inline-block transform transition-transform duration-500 group-hover:rotate-6">
                 {feature.icon}
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">
-                {feature.title}
-              </h3>
-              <p className="text-white/80">
-                {feature.description}
-              </p>
+
+              <h3 className="text-2xl font-bold text-white mb-4">{feature.title}</h3>
+
+              <p className="text-white/90 text-lg leading-relaxed">{feature.description}</p>
             </motion.div>
           ))}
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default Features;
+export default Features
+

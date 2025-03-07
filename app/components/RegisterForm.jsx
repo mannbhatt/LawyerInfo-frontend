@@ -3,7 +3,10 @@
 import { useState } from "react";
 import 'tailwindcss/tailwind.css';
 import Link from "next/link";
+import { useToast } from "../components/ui/toast"
+import { User, Mail, Lock } from "lucide-react"; // Import icons from lucide-react
 const RegisterForm = () => {
+  const { success, error } = useToast()
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState(""); // New field
@@ -38,8 +41,13 @@ const RegisterForm = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     setMessage("");
+    const isValid = validateForm()
 
-    if (!validateForm()) return; // Stop if validation fails
+    if (!isValid) {
+      error("Please fix the errors in the form")
+      return
+    }
+    
 
     setIsLoading(true);
 
@@ -56,7 +64,8 @@ const RegisterForm = () => {
 
       if (response.ok) {
         localStorage.setItem("authToken", data.token);
-        setMessage("Registration successful! Redirecting...");
+        success("Registration successful! Redirecting...");
+         
         setTimeout(() => (window.location.href = "/onboarding"), 2000);
       } else {
         if(data.message.includes("Username")){
@@ -70,7 +79,7 @@ const RegisterForm = () => {
     }
     } catch (error) {
       console.error("Registration error:", error);
-      setMessage("Error occurred. Please try again.");
+      error("An error occurred. Please try again.")
     } finally {
       setIsLoading(false);
     }
@@ -88,7 +97,10 @@ const RegisterForm = () => {
       <form onSubmit={handleRegister} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Username</label>
+            <label className="flex text-sm font-medium text-gray-700  items-center">
+              <User className="w-4 h-4 mr-1 text-[#591B0C]" />
+              Username
+            </label>
             <input
               id="username"
               name="username"
@@ -102,7 +114,10 @@ const RegisterForm = () => {
             {errors.username && <p className="text-red-600 text-sm">{errors.username}</p>}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email Address</label>
+            <label className="flex text-sm font-medium text-gray-700  items-center">
+              <Mail className="w-4 h-4 mr-1 text-[#591B0C]" />
+              Email Address
+            </label>
             <input
               id="email-address"
               name="email"
@@ -117,7 +132,10 @@ const RegisterForm = () => {
             {errors.email && <p className="text-red-600 text-sm">{errors.email}</p>}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <label className="flex text-sm font-medium text-gray-700  items-center">
+              <Lock className="w-4 h-4 mr-1 text-[#591B0C]" />
+              Password
+            </label>
             <input
               id="password"
               name="password"
@@ -132,7 +150,10 @@ const RegisterForm = () => {
             {errors.password && <p className="text-red-600 text-sm">{errors.password}</p>}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
+            <label className=" text-sm font-medium text-gray-700 flex items-center">
+              <Lock className="w-4 h-4 mr-1 text-[#591B0C]" />
+              Confirm Password
+            </label>
             <input
               id="confirm-password"
               name="confirmPassword"

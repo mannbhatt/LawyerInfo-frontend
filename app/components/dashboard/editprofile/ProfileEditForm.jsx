@@ -28,6 +28,9 @@ const ProfileEditForm = ({ profile, onSave }) => {
     if (!formState.fullName?.trim()) {
       newErrors.fullName = "Full name is required"
     }
+    if (!formState.city?.trim()) {
+      newErrors.city = "city is required"
+    }
 
     if (!formState.email?.trim()) {
       newErrors.email = "Email is required"
@@ -226,6 +229,23 @@ const ProfileEditForm = ({ profile, onSave }) => {
           />
           <FileText className="absolute left-3 top-6 text-primary w-5 h-5" />
         </div>
+        </div>
+        <div className="relative">
+          <label htmlFor="city" className={styles.label}>
+            city <span className="text-red-500">*</span>
+          </label>
+          <div className="relative">
+            <input
+              id="city"
+              type="text"
+              name="city"
+              value={formState.city || ""}
+              onChange={handleChange}
+              className={`${styles.input} ${errors.city ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""} pl-11`}
+              placeholder="India"
+            />
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 text-primary w-5 h-5" />
+          </div>
       </div>
 
       <div className={styles.fullWidth}>

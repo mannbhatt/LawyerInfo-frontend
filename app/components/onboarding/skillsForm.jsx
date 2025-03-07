@@ -2,12 +2,15 @@
 
 import { useState } from "react";
 import 'tailwindcss/tailwind.css';
+import { useToast } from "../ui/toast"; // Import useToast hook for toast notifications
+import { Code, X } from 'lucide-react'; // Import icons
 
 const SkillsForm = ({ nextStep, thisStep, skipStep, userId }) => {
   const [skill, setSkill] = useState("");
   const [skills, setSkills] = useState([]);
   const [errors, setErrors] = useState("");
   const [loading, setLoading] = useState(false);
+  const { success, error } = useToast(); // Destructure success and error from useToast hook
 
   const handleInputChange = (e) => {
     setSkill(e.target.value);
@@ -23,7 +26,9 @@ const SkillsForm = ({ nextStep, thisStep, skipStep, userId }) => {
   };
 
   const addSkill = () => {
-    if (!validateForm()) return;
+    if (!validateForm()) {
+      error("Please fix the errors in the form")
+      return};
     setSkills([...skills, skill]);
     setSkill("");
   };
@@ -41,6 +46,7 @@ const SkillsForm = ({ nextStep, thisStep, skipStep, userId }) => {
     const token = localStorage.getItem("authToken");
     if (!token) {
       console.error("No token found. User might not be logged in.");
+      error("No token found. User might not be logged in.")
       return;
     }
     
@@ -57,7 +63,7 @@ const SkillsForm = ({ nextStep, thisStep, skipStep, userId }) => {
       
       const data = await response.json();
       if (response.ok) {
-        alert("Skills added successfully!");
+        success("Skills added successfully!"); // Added toast notification for success
         if (redirectAfterSubmit) {
           nextStep();
         } else {
@@ -65,11 +71,11 @@ const SkillsForm = ({ nextStep, thisStep, skipStep, userId }) => {
           thisStep();
         }
       } else {
-        alert(data.message || "Failed to add skills.");
+        error(data.message || "Failed to add skills."); // Added toast notification for error
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("An error occurred. Please try again.");
+      error("An error occurred. Please try again."); // Added toast notification for error
     }
     setLoading(false);
   };
@@ -83,7 +89,10 @@ const SkillsForm = ({ nextStep, thisStep, skipStep, userId }) => {
         </div>
         <p className="text-center text-sm text-[#591B0C] mt-2">Step 6 of 9: Add Your Skills</p>
       </div>
-      <label className="block text-sm font-medium text-gray-700">Enter Your Skills</label>
+      <label className="flex text-sm font-medium text-gray-700  items-center">
+        <Code className="w-4 h-4 mr-2 text-[#591B0C]" />
+        Enter Your Skills
+      </label>
       <div className="flex w-full items-center justify-between mt-1 mb-6">
         <input
           type="text"
@@ -106,7 +115,9 @@ const SkillsForm = ({ nextStep, thisStep, skipStep, userId }) => {
         {skills.map((s, index) => (
           <li key={index} className="flex justify-between items-center bg-[#ffefdb] p-2 mb-2">
             {s}
-            <button onClick={() => removeSkill(index)} className="text-red-600">cancel</button>
+            <button onClick={() => removeSkill(index)} className="text-red-600">
+              <X className="w-4 h-4" />
+            </button>
           </li>
         ))}
       </ul>

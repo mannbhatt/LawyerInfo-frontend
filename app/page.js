@@ -10,8 +10,10 @@ export default function Home() {
   return (<>
  
  <HeroSection/>
- <ProfileSlider/><HowItWorks/>
  <Features/>
+ <HowItWorks/>
+ <ProfileSlider/>
+ 
  <FAQSection/>
  
   </>);

@@ -285,10 +285,10 @@ export default function ProfilePage() {
                         {profile?.title || "Legal Professional"}
                       </p>
 
-                      {profile?.location && (
+                      {profile?.city && (
                         <div className="flex items-center justify-center md:justify-start gap-2 text-gray-700 mt-2">
                           <MapPin className="w-4 h-4 text-[#591B0C]" />
-                          <span>{profile.location}</span>
+                          <span>{profile.city}</span>
                         </div>
                       )}
                     </div>

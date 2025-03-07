@@ -1,76 +1,122 @@
+"use client";
+
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Search, MapPin } from "lucide-react";
+
 export default function HeroSection() {
-    return (
-      <section className="relative h-[750px] w-full overflow-hidden" id="hero">
-       
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage:
-              "url(https://cdn.pixabay.com/photo/2018/02/16/14/38/portrait-3157821_1280.jpg)",
-              backgroundSize:"cover"
-          }}
+  const [searchQuery, setSearchQuery] = useState("");
+  const [city, setCity] = useState("");
+  const [results, setResults] = useState([]);
+  const [error, setError] = useState("");
+
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) {
+      setError("Please enter a username to search.");
+      return;
+    }
+    setError("");
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/profiles/search?username=${searchQuery}&city=${city}`
+      );
+      const data = await response.json();
+
+      if (data.success) {
+        setResults(data.users);
+      } else {
+        setError(data.message);
+        setResults([]);
+      }
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+      setError("An error occurred while searching.");
+    }
+  };
+
+  return (
+    <section className="relative h-[100vh] w-full overflow-hidden" id="hero">
+      {/* Background Image with Overlay */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage:
+            "url(https://cdn.pixabay.com/photo/2018/02/16/14/38/portrait-3157821_1280.jpg)",
+        }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 to-primary/70" />
+      </div>
+
+      {/* Content */}
+      <div className="relative flex h-full flex-col items-center justify-center px-4 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="mt-32 max-w-5xl mx-auto bottom-0"
         >
-          <div className="absolute inset-0 bg-black/50" />
-        </div>
-  
-        
-        <div className="relative flex h-full flex-col items-center justify-center px-4 top-28 text-center">
-          <h1 className="mb-6  max-w-4xl text-5xl md:leading-7 font-semibold tracking-tight text-white  ">
+          <h1 className="mb-2 text-4xl sm:text-3xl md:text-5xl font-bold tracking-tight text-white leading-tight">
             Find and Connect with Amazing Profiles
           </h1>
-  
-        
-          <div className="w-full max-w-[54rem] space-y-4">
-            <div className="flex flex-col sm:flex-row">
-              <div className="flex-1">
-                 <div className="relative">
-                   <svg
-                    className="absolute left-2 top-[10px] h-6 w-6 text-[#4a0e01]"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                   >
-                  <circle cx="11" cy="11" r="8" />
-                  <path d="m21 21-4.3-4.3" />
-                </svg>
+
+          <p className="mb-4 text-lg sm:text-base md:text-xl text-white/90 max-w-3xl mx-auto">
+            Discover and connect with professionals from around the world
+          </p>
+
+          {/* Search Form */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="w-full max-w-4xl mx-auto bg-white/10 backdrop-blur-md p-4 rounded-lg shadow-lg"
+          >
+            <div className="flex flex-col md:flex-row gap-3">
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-primary" />
                 <input
                   type="text"
-                  placeholder="Search by name or expertise..."
-                  className="h-12 w-full border-0 bg-white/95 pl-10 pr-4 text-gray-950 ring-1 ring-inset ring-gray-300 placeholder:text-gray-800 outline-none"
+                  placeholder="Search by name ..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="h-12 w-full border-0 bg-white pl-10 pr-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:ring-2 focus:ring-secondary outline-none"
                 />
-                </div>
               </div>
-              <div className="flex-1">
-              <div className="relative">
-                <svg
-                  className="absolute left-2 top-[10px] h-6 w-6 text-[#4a0e01]"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 395.71 395.71"
-                  fill="currentColor"
-                >
-                  <path d="M197.849,0C122.131,0,60.531,61.609,60.531,137.329c0,72.887,124.591,243.177,129.896,250.388l4.951,6.738 c0.579,0.792,1.501,1.255,2.471,1.255c0.985,0,1.901-0.463,2.486-1.255l4.948-6.738c5.308-7.211,129.896-177.501,129.896-250.388 C335.179,61.609,273.569,0,197.849,0z M197.849,88.138c27.13,0,49.191,22.062,49.191,49.191c0,27.115-22.062,49.191-49.191,49.191 c-27.114,0-49.191-22.076-49.191-49.191C148.658,110.2,170.734,88.138,197.849,88.138z" />
-                </svg>
+
+              <div className="flex-1 relative">
+                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-primary" />
                 <input
                   type="text"
                   placeholder="Location..."
-                  className="h-12 w-full border-0 bg-white/95 pl-10 pr-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-800 outline-none"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  className="h-12 w-full border-0 bg-white pl-10 pr-4 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-500 focus:ring-2 focus:ring-secondary outline-none"
                 />
               </div>
-              </div>
-              <button className="inline-flex h-12 items-center justify-center  bg-[#ff3003] px-8 text-lg  text-white transition-colors hover:bg-[#ff4b22] focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
-               
+
+              <button
+                onClick={handleSearch}
+                className="h-12 px-8 bg-secondary text-white font-medium transition-all duration-300 hover:bg-secondary-light focus:outline-none focus:ring-2 focus:ring-secondary focus:ring-offset-2 flex items-center justify-center"
+              >
                 Search
               </button>
             </div>
-          </div>
-          <h2 className="mt-4 text-2xl md:text-[1.78rem] md:leading-[1.25rem] text-white/90 font-semibold">Discover and connect with professionals from around the world</h2>
+          </motion.div>
+        </motion.div>
+
+        {/* Search Results */}
+        <div className="mt-6 text-white">
+          {error && <p className="text-red-400">{error}</p>}
+          <ul>
+            {results.map((user) => (
+              <li key={user.username} className="flex items-center space-x-4 mt-2">
+                <img src={user.profileImage} alt={user.username} className="w-12 h-12 rounded-full" />
+                <p>{user.username} - {user.city}</p>
+              </li>
+            ))}
+          </ul>
         </div>
-      </section>
-    )
-  }
-  
-  
+      </div>
+    </section>
+  );
+}

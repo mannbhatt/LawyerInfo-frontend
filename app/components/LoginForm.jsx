@@ -2,8 +2,9 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-
+import { useToast } from "../components/ui/toast"
 import { toast } from 'react-toastify'; 
+import { Mail, Lock } from "lucide-react"; // Import icons from lucide-react
 
 const LoginForm = () => {
   const [email, setEmail] = useState("")
@@ -11,7 +12,7 @@ const LoginForm = () => {
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
-
+  const { success, Error } = useToast()
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError("")
@@ -33,43 +34,17 @@ const LoginForm = () => {
       if (res.ok) {
         localStorage.setItem("authToken", data.token)
         
-        toast.success("Login successful!", {
-          position: "top-center",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        success("Login successful!");
         router.push("/")
       } else {
        
-        toast.error("Login failed. Please try again.", {
-          position: "top-center",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        Error("Login failed. Please try again.");
         setError(data.error || "Login failed. Please try again.")
       }
     } catch (error) {
       
-      toast.error("An error occurred. Please try again.", {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      Error("An error occurred. Please try again.");
+       
       setError("An error occurred. Please try again.")
     } finally {
       setIsLoading(false)
@@ -83,8 +58,10 @@ const LoginForm = () => {
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 gap-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="flex text-sm font-medium text-gray-700  items-center">
+              <Mail className="w-4 h-4 mr-1 text-[#591B0C]" />
               Email Address
+              </label>
               <input
                 type="email"
                 name="email"
@@ -93,11 +70,13 @@ const LoginForm = () => {
                 className="mt-1 block w-full h-9  border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] focus:ring-[#ff3003] sm:text-sm"
                 required
               />
-            </label>
+            
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="flex text-sm font-medium text-gray-700  items-center">
+              <Lock className="w-4 h-4 mr-1 text-[#591B0C]" />
               Password
+              </label>
               <input
                 type="password"
                 name="password"
@@ -106,7 +85,7 @@ const LoginForm = () => {
                 className="mt-1 block w-full h-9  border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] focus:ring-[#ff3003] sm:text-sm"
                 required
               />
-            </label>
+            
           </div>
         </div>
         {error && <p className="mt-1 text-sm text-red-600">{error}</p>}

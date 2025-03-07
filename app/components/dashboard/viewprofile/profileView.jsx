@@ -46,7 +46,7 @@ const ProfileView = ({ profile }) => {
             {profile.location && (
               <div className="flex items-center justify-center md:justify-start gap-2 text-gray-700">
                 <MapPin className="w-4 h-4 text-[#591B0C]" />
-                <span>{profile.location}</span>
+                <span>{profile.city}</span>
               </div>
             )}
 
