@@ -3,25 +3,25 @@
 import { useState } from "react"
 import { Save, User, Mail, Phone, Calendar, Image, FileText } from "lucide-react"
 import { formStyles as styles } from "../../ui/form_styles"
-
+import Imgupload from "../../imgupload"
 const ProfileEditForm = ({ profile, onSave }) => {
   const [formState, setFormState] = useState(profile || {})
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({})
-
+  const [uploadedImage, setUploadedImage] = useState("");  
+  const [imageKey,setImageKey]=useState("");
   const handleChange = (e) => {
     const { name, value } = e.target
-    setFormState((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
+      setFormState((prev) => ({
+        ...prev,
+        [name]: value,
+      }))
 
-    // Clear error when field is edited
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: null }))
     }
   }
-
+  
   const validateForm = () => {
     const newErrors = {}
 
@@ -54,7 +54,14 @@ const ProfileEditForm = ({ profile, onSave }) => {
     e.preventDefault()
 
     if (!validateForm()) return
-
+    setFormState((prev) => ({
+      ...prev,
+      profileImage: uploadedImage,
+      }))
+      setFormState((prev) => ({
+        ...prev,
+        imageKey: imageKey,
+      })) 
     setLoading(true)
     try {
       await onSave(formState)
@@ -177,41 +184,18 @@ const ProfileEditForm = ({ profile, onSave }) => {
         </div>
       </div>
 
-      <div>
-        <label htmlFor="profileImage" className={styles.label}>
-          Profile Image URL
-        </label>
-        <div className="relative">
-          <input
-            id="profileImage"
-            type="url"
-            name="profileImage"
-            value={formState.profileImage || ""}
-            onChange={handleChange}
-            className={`${styles.input} ${errors.profileImage ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""} pl-11`}
-            placeholder="https://example.com/your-image.jpg"
-          />
-          <Image className="absolute left-3 top-1/2 -translate-y-1/2 text-primary w-5 h-5" />
-        </div>
+      
         {errors.profileImage && <p className="mt-1 text-sm text-red-500">{errors.profileImage}</p>}
-
-        {formState.profileImage && (
-          <div className="mt-2 flex items-center space-x-2">
-            <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary">
-              <img
-                src={formState.profileImage || "/placeholder.svg"}
-                alt="Profile preview"
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.target.src = "/placeholder.svg?height=40&width=40"
-                  e.target.alt = "Invalid image URL"
-                }}
-              />
+        <div className="">
+              <label className="flex text-sm   font-medium text-gray-700">
+                <Image size={16} className="text-[#591B0C]" /> Profile Image
+              </label>
+              <Imgupload onUploadComplete={setUploadedImage} onImageKeyChange={setImageKey}/>
+             
             </div>
-            <span className="text-sm text-gray-500">Preview</span>
-          </div>
-        )}
-      </div>
+        
+            
+     
 
       <div className={styles.fullWidth}>
         <label htmlFor="bio" className={styles.label}>

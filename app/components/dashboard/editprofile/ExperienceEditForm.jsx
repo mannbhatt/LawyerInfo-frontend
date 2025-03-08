@@ -1,14 +1,81 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Save, Plus, Trash2, Briefcase, Building, Calendar, FileText } from "lucide-react"
 import { formStyles as styles } from "../../ui/form_styles"
-
 
 const ExperienceEditForm = ({ experience, onSave }) => {
   const [experienceList, setExperienceList] = useState(experience || [])
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState([])
+  const [companies, setCompanies] = useState([])
+  const [showDropdowns, setShowDropdowns] = useState([])
+  const [searchTerms, setSearchTerms] = useState([])
+  const dropdownRefs = useRef([])
+
+  // Initialize state arrays based on experienceList length
+  useEffect(() => {
+    setShowDropdowns(Array(experienceList.length).fill(false))
+    setSearchTerms(experienceList.map((exp) => exp.company || ""))
+    dropdownRefs.current = Array(experienceList.length).fill(null)
+  }, [experienceList.length])
+
+  // Fetch companies on component mount
+  useEffect(() => {
+    fetchCompanies()
+  }, [])
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      dropdownRefs.current.forEach((ref, index) => {
+        if (ref && !ref.contains(event.target)) {
+          const newShowDropdowns = [...showDropdowns]
+          newShowDropdowns[index] = false
+          setShowDropdowns(newShowDropdowns)
+        }
+      })
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [showDropdowns])
+
+  const fetchCompanies = async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/companies`)
+      const data = await response.json()
+      if (response.ok) {
+        setCompanies(
+          data.companies || [
+            { _id: "1", name: "Smith & Associates Law Firm" },
+            { _id: "2", name: "Johnson Legal Group" },
+            { _id: "3", name: "Williams & Partners" },
+            { _id: "4", name: "Brown Law Offices" },
+            { _id: "5", name: "Davis & Miller Attorneys" },
+            { _id: "6", name: "Wilson Legal Services" },
+            { _id: "7", name: "Taylor & Associates" },
+            { _id: "8", name: "Anderson Law Group" },
+            { _id: "9", name: "Thomas Legal Consultants" },
+            { _id: "10", name: "Jackson & Moore Law Firm" },
+          ],
+        )
+      } else {
+        console.error("Failed to fetch companies:", data.message)
+      }
+    } catch (error) {
+      console.error("Error fetching companies:", error)
+      // Fallback data in case of error
+      setCompanies([
+        { _id: "1", name: "Smith & Associates Law Firm" },
+        { _id: "2", name: "Johnson Legal Group" },
+        { _id: "3", name: "Williams & Partners" },
+        { _id: "4", name: "Brown Law Offices" },
+        { _id: "5", name: "Davis & Miller Attorneys" },
+      ])
+    }
+  }
 
   const handleAdd = () => {
     setExperienceList([
@@ -19,10 +86,15 @@ const ExperienceEditForm = ({ experience, onSave }) => {
         startDate: "",
         endDate: "",
         description: "",
+        currentlyWorking: false,
       },
     ])
     // Add a new empty errors object
     setErrors([...errors, {}])
+    // Add new entries to state arrays
+    setShowDropdowns([...showDropdowns, false])
+    setSearchTerms([...searchTerms, ""])
+    dropdownRefs.current = [...dropdownRefs.current, null]
   }
 
   const handleChange = (index, field, value) => {
@@ -38,9 +110,54 @@ const ExperienceEditForm = ({ experience, onSave }) => {
     }
   }
 
+  const handleCompanyChange = (index, value) => {
+    // Update the search term
+    const newSearchTerms = [...searchTerms]
+    newSearchTerms[index] = value
+    setSearchTerms(newSearchTerms)
+
+    // Show the dropdown
+    const newShowDropdowns = [...showDropdowns]
+    newShowDropdowns[index] = true
+    setShowDropdowns(newShowDropdowns)
+
+    // Update the experience list
+    handleChange(index, "company", value)
+  }
+
+  const handleCompanySelect = (index, companyName) => {
+    // Update the search term
+    const newSearchTerms = [...searchTerms]
+    newSearchTerms[index] = companyName
+    setSearchTerms(newSearchTerms)
+
+    // Hide the dropdown
+    const newShowDropdowns = [...showDropdowns]
+    newShowDropdowns[index] = false
+    setShowDropdowns(newShowDropdowns)
+
+    // Update the experience list
+    handleChange(index, "company", companyName)
+  }
+
+  const handleCurrentlyWorkingChange = (index, checked) => {
+    const newList = [...experienceList]
+    newList[index].currentlyWorking = checked
+
+    // Clear end date if currently working
+    if (checked) {
+      newList[index].endDate = ""
+    }
+
+    setExperienceList(newList)
+  }
+
   const handleRemove = (index) => {
     setExperienceList(experienceList.filter((_, i) => i !== index))
     setErrors(errors.filter((_, i) => i !== index))
+    setShowDropdowns(showDropdowns.filter((_, i) => i !== index))
+    setSearchTerms(searchTerms.filter((_, i) => i !== index))
+    dropdownRefs.current = dropdownRefs.current.filter((_, i) => i !== index)
   }
 
   const validateForm = () => {
@@ -87,6 +204,12 @@ const ExperienceEditForm = ({ experience, onSave }) => {
     }
   }
 
+  // Filter companies based on search term
+  const getFilteredCompanies = (searchTerm) => {
+    if (!searchTerm) return []
+    return companies.filter((company) => company.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       {experienceList.length === 0 ? (
@@ -118,7 +241,7 @@ const ExperienceEditForm = ({ experience, onSave }) => {
               </div>
 
               <div className={styles.grid}>
-                <div>
+                <div ref={(el) => (dropdownRefs.current[index] = el)} className="relative">
                   <label htmlFor={`company-${index}`} className={styles.label}>
                     Company Name <span className="text-red-500">*</span>
                   </label>
@@ -126,14 +249,45 @@ const ExperienceEditForm = ({ experience, onSave }) => {
                     <input
                       id={`company-${index}`}
                       type="text"
-                      value={exp.company}
-                      onChange={(e) => handleChange(index, "company", e.target.value)}
+                      value={searchTerms[index]}
+                      onChange={(e) => handleCompanyChange(index, e.target.value)}
+                      onFocus={() => {
+                        const newShowDropdowns = [...showDropdowns]
+                        newShowDropdowns[index] = true
+                        setShowDropdowns(newShowDropdowns)
+                      }}
                       className={`${styles.input} ${errors[index]?.company ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""} pl-11`}
-                      placeholder="Smith & Associates Law Firm"
+                      placeholder="Search for company..."
                     />
                     <Building className="absolute left-3 top-1/2 -translate-y-1/2 text-primary w-5 h-5" />
                   </div>
                   {errors[index]?.company && <p className="mt-1 text-sm text-red-500">{errors[index].company}</p>}
+
+                  {/* Dropdown for companies */}
+                  {showDropdowns[index] && (
+                    <div className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base overflow-auto focus:outline-none sm:text-sm border border-gray-300">
+                      {getFilteredCompanies(searchTerms[index]).length > 0 ? (
+                        getFilteredCompanies(searchTerms[index]).map((company) => (
+                          <div
+                            key={company._id}
+                            className="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-gray-100"
+                            onClick={() => handleCompanySelect(index, company.name)}
+                          >
+                            {company.name}
+                          </div>
+                        ))
+                      ) : searchTerms[index] ? (
+                        <div
+                          className="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-gray-100"
+                          onClick={() => handleCompanySelect(index, searchTerms[index])}
+                        >
+                          Use "{searchTerms[index]}"
+                        </div>
+                      ) : (
+                        <div className="py-2 pl-3 pr-9 text-gray-500">Type to search companies</div>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 <div>
@@ -181,11 +335,24 @@ const ExperienceEditForm = ({ experience, onSave }) => {
                       type="date"
                       value={exp.endDate}
                       onChange={(e) => handleChange(index, "endDate", e.target.value)}
-                      className={`${styles.input} pl-11`}
+                      className={`${styles.input} pl-11 ${exp.currentlyWorking ? "bg-gray-100 cursor-not-allowed" : ""}`}
+                      disabled={exp.currentlyWorking}
                     />
                     <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-primary w-5 h-5" />
                   </div>
-                  <p className="mt-1 text-xs text-gray-500">Leave blank if currently working here</p>
+
+                  <div className="flex items-center mt-2">
+                    <input
+                      id={`currentlyWorking-${index}`}
+                      type="checkbox"
+                      checked={exp.currentlyWorking}
+                      onChange={(e) => handleCurrentlyWorkingChange(index, e.target.checked)}
+                      className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                    />
+                    <label htmlFor={`currentlyWorking-${index}`} className="ml-2 block text-sm text-gray-700">
+                      I currently work here
+                    </label>
+                  </div>
                 </div>
 
                 <div className={styles.fullWidth}>

@@ -7,7 +7,7 @@ import Image from "next/image";
 export default function Imgupload({ onUploadComplete, onImageKeyChange }) {
   const [imageUrl, setImageUrl] = useState("");
   const [imageKey, setImageKey] = useState("");
-  
+ 
   const handleRemove = async () => {
     if (!imageKey) return;
 

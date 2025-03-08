@@ -3,13 +3,14 @@
 import { useState } from "react"
 import { Save, Plus, Trash2, Award, Building, Calendar, Link, Image } from "lucide-react"
 import { formStyles as styles } from "../../ui/form_styles"
-
+import Imgupload from "../../imgupload"
 
 const AchievementsEditForm = ({ achievements, onSave }) => {
   const [achievementList, setAchievementList] = useState(achievements || [])
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState([])
-
+  const [uploadedImage, setUploadedImage] = useState("");  
+  const [imageKey,setImageKey]=useState("");
   const handleAdd = () => {
     setAchievementList([
       ...achievementList,
@@ -19,6 +20,7 @@ const AchievementsEditForm = ({ achievements, onSave }) => {
         issue_date: "",
         credential_url: "",
         certificate_image: "",
+        imageKey:"",
       },
     ])
     // Add a new empty errors object
@@ -81,6 +83,14 @@ const AchievementsEditForm = ({ achievements, onSave }) => {
   }
 
   const handleSubmit = async (e) => {
+    setAchievementList((prev) => ({
+      ...prev,
+      certificate_image: uploadedImage,
+      }))
+      setAchievementList((prev) => ({
+        ...prev,
+        imageKey: imageKey,
+      })) 
     e.preventDefault()
 
     if (!validateForm()) return
@@ -209,38 +219,8 @@ const AchievementsEditForm = ({ achievements, onSave }) => {
                   <label htmlFor={`certificate_image-${index}`} className={styles.label}>
                     Certificate Image URL
                   </label>
-                  <div className="relative">
-                    <input
-                      id={`certificate_image-${index}`}
-                      type="url"
-                      value={ach.certificate_image}
-                      onChange={(e) => handleChange(index, "certificate_image", e.target.value)}
-                      className={`${styles.input} ${errors[index]?.certificate_image ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""} pl-11`}
-                      placeholder="https://example.com/certificate.jpg"
-                    />
-                    <Image className="absolute left-3 top-1/2 -translate-y-1/2 text-primary w-5 h-5" />
-                  </div>
-                  {errors[index]?.certificate_image && (
-                    <p className="mt-1 text-sm text-red-500">{errors[index].certificate_image}</p>
-                  )}
-
-                  {ach.certificate_image && (
-                    <div className="mt-2 flex items-center space-x-2">
-                      <div className="w-10 h-10 rounded overflow-hidden border-2 border-primary">
-                        <img
-                          src={ach.certificate_image || "/placeholder.svg"}
-                          alt="Certificate preview"
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.target.src = "/placeholder.svg?height=40&width=40"
-                            e.target.alt = "Invalid image URL"
-                          }}
-                        />
-                      </div>
-                      <span className="text-sm text-gray-500">Preview</span>
-                    </div>
-                  )}
-                </div>
+                  <Imgupload onUploadComplete={setUploadedImage} onImageKeyChange={setImageKey}/>
+                 </div>
               </div>
             </div>
           ))}

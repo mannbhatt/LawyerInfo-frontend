@@ -20,6 +20,8 @@ import SocialLinksEditForm from "../components/dashboard/editprofile/SocialLinks
 import ContributionView from "../components/dashboard/viewprofile/ContributionView"
 import ContributionEditForm from "../components/dashboard/editprofile/ContributionEditForm"
 import ProfileSection from "../components/dashboard/viewprofile/ProfileSection"
+import ProfileView from "../components/dashboard/viewprofile/profileView"
+import ProfileEditForm from "../components/dashboard/editprofile/ProfileEditForm"
 
 export default function ProfilePage() {
   const { username } = useParams()
@@ -251,7 +253,7 @@ export default function ProfilePage() {
   return (
     <div className="bg-gray-50 min-h-screen pb-12">
       {/* LinkedIn-style Cover Photo */}
-      <div className="relative h-48 md:h-64 bg-gradient-to-r from-[#591B0C] to-[#3d1208] overflow-hidden">
+      <div className="relative h-48 md:h-48 bg-gradient-to-r from-[#591B0C] to-[#3d1208] overflow-hidden">
         {/* Optional: Add a cover photo if available */}
         {profile?.coverImage && (
           <Image src={profile.coverImage || "/placeholder.svg"} alt="Cover" fill className="object-cover opacity-30" />
@@ -261,97 +263,20 @@ export default function ProfilePage() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* LinkedIn-style Profile Header */}
         <div className="relative -mt-20 mb-8">
-          <div className="bg-white shadow-md overflow-hidden">
-            <div className="p-6 sm:p-8">
-              <div className="flex flex-col md:flex-row gap-6">
-                {/* Profile Image */}
-                <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white shadow-lg mx-auto md:mx-0">
-                  <Image
-                    src={profile?.profileImage || "/placeholder.svg?height=160&width=160"}
-                    alt={profile?.fullName || "Profile"}
-                    fill
-                    className="object-cover"
-                    priority
-                  />
-                </div>
-
-                <div className="flex-1 text-center md:text-left">
-                  <div className="flex flex-col md:flex-row md:justify-between md:items-start">
-                    <div>
-                      <h1 className="text-3xl font-bold text-[#591B0C]">
-                        {profile?.fullName || user?.username || username}
-                      </h1>
-                      <p className="text-xl text-[#ff3003] font-medium mt-1">
-                        {profile?.title || "Legal Professional"}
-                      </p>
-
-                      {profile?.city && (
-                        <div className="flex items-center justify-center md:justify-start gap-2 text-gray-700 mt-2">
-                          <MapPin className="w-4 h-4 text-[#591B0C]" />
-                          <span>{profile.city}</span>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Edit Profile Button - Only visible to profile owner */}
-                    {isOwnProfile && (
-                      <div className="mt-4 md:mt-0">
-                        <button
-                          onClick={() => toggleEditMode("profiles")}
-                          className="px-4 py-2 bg-[#591B0C] text-white  hover:bg-[#3d1208] transition-colors"
-                        >
-                          Edit Profile
-                        </button>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Contact Info */}
-                  <div className="mt-4 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                    {profile?.email && (
-                      <div className="flex items-center gap-2 text-gray-700">
-                        <Mail className="w-4 h-4 text-[#591B0C]" />
-                        <a href={`mailto:${profile.email}`} className="hover:text-[#591B0C] transition-colors">
-                          {profile.email}
-                        </a>
-                      </div>
-                    )}
-
-                    {profile?.phone && (
-                      <div className="flex items-center gap-2 text-gray-700">
-                        <Phone className="w-4 h-4 text-[#591B0C]" />
-                        <a href={`tel:${profile.phone}`} className="hover:text-[#591B0C] transition-colors">
-                          {profile.phone}
-                        </a>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Bio Preview */}
-                  {profile?.bio && (
-                    <div className="mt-4 text-gray-700">
-                      <p className="line-clamp-3">{profile.bio}</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Owner Badge */}
-              {isOwnProfile && (
-                <div className="absolute top-4 right-4">
-                  <span className="inline-flex items-center px-2.5 py-0.5  text-xs font-medium bg-[#ffefdb] text-[#591B0C]">
-                    Your Profile
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
+            <ProfileSection
+              title="Profile"
+              editMode={editMode.profiles}
+              onToggleEdit={isOwnProfile ? () => toggleEditMode("profiles") : null}
+                            ViewComponent={<ProfileView profile={profile} />}
+              EditComponent={<ProfileEditForm profile={profile} onSave={(data) => handleSave("profiles", data)} />}
+            />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
 
+          
             
             {/* About Section */}
             <ProfileSection

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Save, Plus, Trash2, BookOpen, Building, Calendar, Award } from "lucide-react"
 import { formStyles as styles } from "../../ui/form_styles"
 
@@ -8,6 +8,74 @@ const EducationEditForm = ({ education, onSave }) => {
   const [educationList, setEducationList] = useState(education || [])
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState([])
+  const [institutions, setInstitutions] = useState([])
+  const [showDropdowns, setShowDropdowns] = useState([])
+  const [searchTerms, setSearchTerms] = useState([])
+  const dropdownRefs = useRef([])
+
+  // Initialize state arrays based on educationList length
+  useEffect(() => {
+    setShowDropdowns(Array(educationList.length).fill(false))
+    setSearchTerms(educationList.map((edu) => edu.institution || ""))
+    dropdownRefs.current = Array(educationList.length).fill(null)
+  }, [educationList.length])
+
+  // Fetch institutions on component mount
+  useEffect(() => {
+    fetchInstitutions()
+  }, [])
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      dropdownRefs.current.forEach((ref, index) => {
+        if (ref && !ref.contains(event.target)) {
+          const newShowDropdowns = [...showDropdowns]
+          newShowDropdowns[index] = false
+          setShowDropdowns(newShowDropdowns)
+        }
+      })
+    }
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [showDropdowns])
+
+  const fetchInstitutions = async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/institutions`)
+      const data = await response.json()
+      if (response.ok) {
+        setInstitutions(
+          data.institutions || [
+            { _id: "1", name: "Harvard University" },
+            { _id: "2", name: "Stanford University" },
+            { _id: "3", name: "MIT" },
+            { _id: "4", name: "Oxford University" },
+            { _id: "5", name: "Cambridge University" },
+            { _id: "6", name: "Yale University" },
+            { _id: "7", name: "Princeton University" },
+            { _id: "8", name: "Columbia University" },
+            { _id: "9", name: "University of Chicago" },
+            { _id: "10", name: "University of California, Berkeley" },
+          ],
+        )
+      } else {
+        console.error("Failed to fetch institutions:", data.message)
+      }
+    } catch (error) {
+      console.error("Error fetching institutions:", error)
+      // Fallback data in case of error
+      setInstitutions([
+        { _id: "1", name: "Harvard University" },
+        { _id: "2", name: "Stanford University" },
+        { _id: "3", name: "MIT" },
+        { _id: "4", name: "Oxford University" },
+        { _id: "5", name: "Cambridge University" },
+      ])
+    }
+  }
 
   const handleAdd = () => {
     setEducationList([
@@ -18,11 +86,15 @@ const EducationEditForm = ({ education, onSave }) => {
         startDate: "",
         endDate: "",
         grade: "",
-        description:"",
+        description: "",
       },
     ])
     // Add a new empty errors object
     setErrors([...errors, {}])
+    // Add new entries to state arrays
+    setShowDropdowns([...showDropdowns, false])
+    setSearchTerms([...searchTerms, ""])
+    dropdownRefs.current = [...dropdownRefs.current, null]
   }
 
   const handleChange = (index, field, value) => {
@@ -38,9 +110,42 @@ const EducationEditForm = ({ education, onSave }) => {
     }
   }
 
+  const handleInstitutionChange = (index, value) => {
+    // Update the search term
+    const newSearchTerms = [...searchTerms]
+    newSearchTerms[index] = value
+    setSearchTerms(newSearchTerms)
+
+    // Show the dropdown
+    const newShowDropdowns = [...showDropdowns]
+    newShowDropdowns[index] = true
+    setShowDropdowns(newShowDropdowns)
+
+    // Update the education list
+    handleChange(index, "institution", value)
+  }
+
+  const handleInstitutionSelect = (index, institutionName) => {
+    // Update the search term
+    const newSearchTerms = [...searchTerms]
+    newSearchTerms[index] = institutionName
+    setSearchTerms(newSearchTerms)
+
+    // Hide the dropdown
+    const newShowDropdowns = [...showDropdowns]
+    newShowDropdowns[index] = false
+    setShowDropdowns(newShowDropdowns)
+
+    // Update the education list
+    handleChange(index, "institution", institutionName)
+  }
+
   const handleRemove = (index) => {
     setEducationList(educationList.filter((_, i) => i !== index))
     setErrors(errors.filter((_, i) => i !== index))
+    setShowDropdowns(showDropdowns.filter((_, i) => i !== index))
+    setSearchTerms(searchTerms.filter((_, i) => i !== index))
+    dropdownRefs.current = dropdownRefs.current.filter((_, i) => i !== index)
   }
 
   const validateForm = () => {
@@ -62,6 +167,7 @@ const EducationEditForm = ({ education, onSave }) => {
         eduErrors.startDate = "Start date is required"
         isValid = false
       }
+
       if (!edu.description?.trim()) {
         eduErrors.description = "Description is required"
         isValid = false
@@ -89,6 +195,12 @@ const EducationEditForm = ({ education, onSave }) => {
     } finally {
       setLoading(false)
     }
+  }
+
+  // Filter institutions based on search term
+  const getFilteredInstitutions = (searchTerm) => {
+    if (!searchTerm) return []
+    return institutions.filter((institution) => institution.name.toLowerCase().includes(searchTerm.toLowerCase()))
   }
 
   return (
@@ -140,7 +252,7 @@ const EducationEditForm = ({ education, onSave }) => {
                   {errors[index]?.degree && <p className="mt-1 text-sm text-red-500">{errors[index].degree}</p>}
                 </div>
 
-                <div>
+                <div ref={(el) => (dropdownRefs.current[index] = el)} className="relative">
                   <label htmlFor={`institution-${index}`} className={styles.label}>
                     Institution <span className="text-red-500">*</span>
                   </label>
@@ -148,15 +260,46 @@ const EducationEditForm = ({ education, onSave }) => {
                     <input
                       id={`institution-${index}`}
                       type="text"
-                      value={edu.institution}
-                      onChange={(e) => handleChange(index, "institution", e.target.value)}
+                      value={searchTerms[index]}
+                      onChange={(e) => handleInstitutionChange(index, e.target.value)}
+                      onFocus={() => {
+                        const newShowDropdowns = [...showDropdowns]
+                        newShowDropdowns[index] = true
+                        setShowDropdowns(newShowDropdowns)
+                      }}
                       className={`${styles.input} ${errors[index]?.institution ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""} pl-11`}
-                      placeholder="Harvard Law School"
+                      placeholder="Search for institution..."
                     />
                     <Building className="absolute left-3 top-1/2 -translate-y-1/2 text-primary w-5 h-5" />
                   </div>
                   {errors[index]?.institution && (
                     <p className="mt-1 text-sm text-red-500">{errors[index].institution}</p>
+                  )}
+
+                  {/* Dropdown for institutions */}
+                  {showDropdowns[index] && (
+                    <div className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base overflow-auto focus:outline-none sm:text-sm border border-gray-300">
+                      {getFilteredInstitutions(searchTerms[index]).length > 0 ? (
+                        getFilteredInstitutions(searchTerms[index]).map((institution) => (
+                          <div
+                            key={institution._id}
+                            className="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-gray-100"
+                            onClick={() => handleInstitutionSelect(index, institution.name)}
+                          >
+                            {institution.name}
+                          </div>
+                        ))
+                      ) : searchTerms[index] ? (
+                        <div
+                          className="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-gray-100"
+                          onClick={() => handleInstitutionSelect(index, searchTerms[index])}
+                        >
+                          Use "{searchTerms[index]}"
+                        </div>
+                      ) : (
+                        <div className="py-2 pl-3 pr-9 text-gray-500">Type to search institutions</div>
+                      )}
+                    </div>
                   )}
                 </div>
 
@@ -212,7 +355,7 @@ const EducationEditForm = ({ education, onSave }) => {
                 </div>
                 <div className={styles.fullWidth}>
                   <label htmlFor={`description-${index}`} className={styles.label}>
-                    Description
+                    Description <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <textarea
@@ -220,11 +363,14 @@ const EducationEditForm = ({ education, onSave }) => {
                       value={edu.description}
                       onChange={(e) => handleChange(index, "description", e.target.value)}
                       rows={3}
-                      className={`${styles.textarea} pl-11`}
-                      placeholder="Describe your responsibilities, achievements, and the types of cases you handled..."
+                      className={`${styles.textarea} ${errors[index]?.description ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""} pl-11`}
+                      placeholder="Describe your studies, achievements, and projects..."
                     />
                     <Award className="absolute left-3 top-6 text-primary w-5 h-5" />
                   </div>
+                  {errors[index]?.description && (
+                    <p className="mt-1 text-sm text-red-500">{errors[index].description}</p>
+                  )}
                 </div>
               </div>
             </div>
