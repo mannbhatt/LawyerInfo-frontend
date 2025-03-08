@@ -105,15 +105,15 @@ export default function ProfilePage() {
       }
   
       const profileData = await profileRes.json();
-  
+  	console.log(profileData);
       // Set state with fetched data
       setProfile(profileData.data.profile || null);
       setEducation(profileData.data.education || []);
       setExperience(profileData.data.experience || []);
       setAbout(profileData.data.about || {});
       setAchievements(profileData.data.achievements || []);
-      setSkills(profileData.data.skills || []);
-      setSocialLinks(profileData.data.socialLinks || {});
+      setSkills(profileData.data.skills.skills || []);
+      setSocialLinks(profileData.data.socialLinks.links || {});
       setContribution(profileData.data.contributions || []);
   
     } catch (err) {
