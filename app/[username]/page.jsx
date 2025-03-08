@@ -73,82 +73,57 @@ export default function ProfilePage() {
   // Fetch user profile based on username
   const fetchUserProfile = async () => {
     try {
-      setLoading(true)
-      const token = typeof window !== "undefined" ? localStorage.getItem("authToken") : null
-
-      // Fetch user data
+      setLoading(true);
+      const token = typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
+  
+      // Fetch user data based on username
       const userRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/${username}`, {
         headers: {},
-      })
-
+      });
+  
       if (!userRes.ok) {
-        throw new Error("User not found")
+        throw new Error("User not found");
       }
-
-      const userData = await userRes.json()
-      setUser(userData)
-
-      // Check if this is the user's own profile
+  
+      const userData = await userRes.json();
+      setUser(userData);
+  
+      // Check if the logged-in user is viewing their own profile
       if (userId && (userId === userData._id || userId === userData.id)) {
-        setIsOwnProfile(true)
+        setIsOwnProfile(true);
       } else {
-        setIsOwnProfile(false)
+        setIsOwnProfile(false);
       }
-
-      // Fetch all profile sections
-      const fetchData = async (endpoint, setter) => {
-        try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${endpoint}/${userData._id || userData.id}`, {
-            headers: token ? { Authorization: `Bearer ${token}` } : {},
-          })
-          if (res.ok) {
-            const data = await res.json()
-            return data
-          }
-          return null
-        } catch (err) {
-          console.error(`Error fetching ${endpoint}:`, err)
-          return null
-        }
+  
+      // Fetch all profile-related data in a single API call
+      const profileRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/profiledata/${userData._id || userData.id}`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+  
+      if (!profileRes.ok) {
+        throw new Error("Profile data not found");
       }
-
-      // Fetch all data in parallel
-      const [
-        profileData,
-        educationData,
-        experienceData,
-        aboutData,
-        achievementsData,
-        skillsData,
-        socialLinksData,
-        contributionData,
-      ] = await Promise.all([
-        fetchData("profiles", setProfile),
-        fetchData("education", setEducation),
-        fetchData("experience", setExperience),
-        fetchData("about", setAbout),
-        fetchData("achievements", setAchievements),
-        fetchData("skills", setSkills),
-        fetchData("socialLink", setSocialLinks),
-        fetchData("contribution", setContribution),
-      ])
-
+  
+      const profileData = await profileRes.json();
+  
       // Set state with fetched data
-      setProfile(profileData?.profile || null)
-      setEducation(educationData?.educationRecords || [])
-      setExperience(experienceData?.experiences || [])
-      setAbout(aboutData?.about || {})
-      setAchievements(achievementsData?.certifications || [])
-      setSkills(skillsData?.skills || [])
-      setSocialLinks(socialLinksData?.links || {})
-      setContribution(contributionData?.contributions || [])
+      setProfile(profileData.data.profile || null);
+      setEducation(profileData.data.education || []);
+      setExperience(profileData.data.experience || []);
+      setAbout(profileData.data.about || {});
+      setAchievements(profileData.data.achievements || []);
+      setSkills(profileData.data.skills || []);
+      setSocialLinks(profileData.data.socialLinks || {});
+      setContribution(profileData.data.contributions || []);
+  
     } catch (err) {
-      setError(err.message)
+      setError(err.message);
+      console.error("Error fetching profile:", err);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
-
+  };
+  
   const handleSave = async (collection, data) => {
     try {
       const token = localStorage.getItem("authToken")
@@ -158,14 +133,16 @@ export default function ProfilePage() {
       if (!isOwnProfile) {
         throw new Error("You can only edit your own profile")
       }
-
+      
       let formattedData = data
       if (collection === "skills") {
         formattedData = { skills: data }
       } else if (collection === "socialLink") {
         formattedData = { links: data }
+      }else if (collection === "achievements") {
+        formattedData = data.achievements || data;
       }
-
+	
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${collection}/me`, {
         method: "PUT",
         headers: {

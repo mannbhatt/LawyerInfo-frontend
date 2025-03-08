@@ -49,22 +49,16 @@ const ProfileEditForm = ({ profile, onSave }) => {
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
-
+  
+  
   const handleSubmit = async (e) => {
-    e.preventDefault()
-
-    if (!validateForm()) return
-    setFormState((prev) => ({
-      ...prev,
-      profileImage: uploadedImage,
-      }))
-      setFormState((prev) => ({
-        ...prev,
-        imageKey: imageKey,
-      })) 
+    e.preventDefault();
+    
+    if (!validateForm()) return;
+    
     setLoading(true)
     try {
-      await onSave(formState)
+      await onSave({ ...formState, profileImage: uploadedImage, imageKey: imageKey })
       // Success notification could be added here
     } catch (error) {
       console.error("Error saving profile:", error)

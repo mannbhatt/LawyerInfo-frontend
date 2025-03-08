@@ -72,7 +72,7 @@ export default function Imgupload({ onUploadComplete, onImageKeyChange }) {
           }}
           endpoint="imageUploader"
           onClientUploadComplete={(res) => {
-            console.log("Files: ", res);
+           // console.log("Files: ", res);
             const url = res[0]?.url;
             const key = res[0]?.key;
             setImageUrl(url);

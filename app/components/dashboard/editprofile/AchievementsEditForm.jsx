@@ -83,25 +83,22 @@ const AchievementsEditForm = ({ achievements, onSave }) => {
   }
 
   const handleSubmit = async (e) => {
-    setAchievementList((prev) => ({
-      ...prev,
-      certificate_image: uploadedImage,
-      }))
-      setAchievementList((prev) => ({
-        ...prev,
-        imageKey: imageKey,
-      })) 
+   
     e.preventDefault()
 
     if (!validateForm()) return
-
+   
     setLoading(true)
     try {
-      await onSave(achievementList)
-      // Success notification could be added here
+      await onSave(achievementList.map(ach => ({
+        ...ach,
+        certificate_image: uploadedImage,
+        imageKey: imageKey,
+      })))
+      
     } catch (error) {
       console.error("Error saving achievements:", error)
-      // Error notification could be added here
+      
     } finally {
       setLoading(false)
     }
