@@ -105,7 +105,7 @@ export default function ProfilePage() {
       }
   
       const profileData = await profileRes.json();
-  	console.log(profileData);
+  	//console.log(profileData);
       // Set state with fetched data
       setProfile(profileData.data.profile || null);
       setEducation(profileData.data.education || []);
