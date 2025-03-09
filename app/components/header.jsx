@@ -86,6 +86,9 @@ export default function Header() {
     localStorage.clear()
     setUser(null)
     router.push("/login")
+    setTimeout(() => {
+    window.location.reload(); // Reload the page to clear client-side state
+  }, 100);
   }
 
   return (
