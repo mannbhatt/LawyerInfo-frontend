@@ -14,7 +14,10 @@ const ContributionView = ({ contributions }) => {
   return (
     <div className="space-y-6">
       {contributions.map((contribution, index) => (
-        <div key={index} className={styles.item}>
+        <div
+          key={index}
+          className="p-4 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors duration-200"
+        >
           <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-2">
             <div>
               <h3 className="text-xl font-semibold text-[#591B0C]">{contribution.title}</h3>
@@ -28,7 +31,7 @@ const ContributionView = ({ contributions }) => {
             </div>
 
             {contribution.date && (
-              <div className="flex items-center gap-1 bg-[#ffefdb] text-[#591B0C] px-3 py-1  text-sm font-medium mt-2 md:mt-0 self-start">
+              <div className={styles.dateTag}>
                 <span>{contribution.date}</span>
               </div>
             )}

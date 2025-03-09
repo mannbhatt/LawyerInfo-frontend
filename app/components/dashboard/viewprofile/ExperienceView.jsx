@@ -11,10 +11,22 @@ const ExperienceView = ({ experience }) => {
     )
   }
 
+  const formatDate = (dateString) => {
+    if (!dateString) return "Present"
+    try {
+      return new Date(dateString).toLocaleString("default", { month: "short", year: "numeric" })
+    } catch (e) {
+      return dateString
+    }
+  }
+
   return (
     <div className="space-y-6">
       {experience.map((exp, index) => (
-        <div key={index} className={styles.item}>
+        <div
+          key={index}
+          className="p-4 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors duration-200"
+        >
           <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-2">
             <div>
               <h3 className="text-xl font-semibold text-[#591B0C]">{exp.position}</h3>
@@ -31,10 +43,10 @@ const ExperienceView = ({ experience }) => {
               )}
             </div>
 
-            <div className="flex items-center gap-1 bg-[#ffefdb] text-[#591B0C] px-3 py-1  text-sm font-medium mt-2 md:mt-0 self-start">
+            <div className={styles.dateTag}>
               <Calendar className="w-3 h-3" />
               <span>
-                {exp.startDate} - {exp.endDate || "Present"}
+                {formatDate(exp.startDate)} - {formatDate(exp.endDate)}
               </span>
             </div>
           </div>

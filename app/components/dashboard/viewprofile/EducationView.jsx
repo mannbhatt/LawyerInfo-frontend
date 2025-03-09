@@ -34,7 +34,8 @@ const EducationView = ({ education }) => {
             <div className="flex items-center gap-1 bg-[#ffefdb] text-[#591B0C] px-3 py-1  text-sm font-medium mt-2 md:mt-0 self-start">
               <Calendar className="w-3 h-3" />
               <span>
-                {edu.startDate} - {edu.endDate || "Present"}
+              {new Date(edu.startDate).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })} - {edu.endDate ? new Date(edu.endDate).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }) : "Present"}
+
               </span>
             </div>
           </div>

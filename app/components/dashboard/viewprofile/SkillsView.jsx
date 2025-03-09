@@ -24,7 +24,7 @@ const SkillsView = ({ skills }) => {
         {skills.map((skill, idx) => (
           <span
             key={idx}
-            className="inline-flex items-center px-3 py-2 rounded-md text-sm font-medium bg-[#ffefdb] text-[#591B0C] border border-[#ffdbb5]"
+            className="inline-flex items-center px-3 py-2 rounded-md text-sm font-medium bg-[#ffefdb] text-[#591B0C] border border-[#ffdbb5] hover:bg-[#ffdbb5] transition-colors duration-200"
           >
             {skill}
           </span>

@@ -11,10 +11,22 @@ const AchievementsView = ({ achievements }) => {
     )
   }
 
+  const formatDate = (dateString) => {
+    if (!dateString) return ""
+    try {
+      return new Date(dateString).toLocaleDateString()
+    } catch (e) {
+      return dateString
+    }
+  }
+
   return (
     <div className="space-y-6">
       {achievements.map((ach, index) => (
-        <div key={index} className={styles.item}>
+        <div
+          key={index}
+          className="p-4 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors duration-200"
+        >
           <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-2">
             <div>
               <h3 className="text-xl font-semibold text-[#591B0C]">{ach.certificate_name}</h3>
@@ -24,9 +36,9 @@ const AchievementsView = ({ achievements }) => {
               </div>
             </div>
 
-            <div className="flex items-center gap-1 bg-[#ffefdb] text-[#591B0C] px-3 py-1  text-sm font-medium mt-2 md:mt-0 self-start">
+            <div className={styles.dateTag}>
               <Calendar className="w-3 h-3" />
-              <span>Issued: {new Date(ach.issue_date).toLocaleDateString()}</span>
+              <span>Issued: {formatDate(ach.issue_date)}</span>
             </div>
           </div>
 
@@ -36,7 +48,7 @@ const AchievementsView = ({ achievements }) => {
                 <img
                   src={ach.certificate_image || "/placeholder.svg"}
                   alt="Certificate"
-                  className="w-full h-auto object-cover  border border-gray-200 shadow-sm"
+                  className="w-full h-auto object-cover rounded-md border border-gray-200 shadow-sm"
                   onError={(e) => {
                     e.target.src = "/placeholder.svg?height=100&width=200"
                     e.target.alt = "Certificate image not available"

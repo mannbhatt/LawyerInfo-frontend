@@ -112,8 +112,10 @@ export default function ProfilePage() {
       setExperience(profileData.data.experience || []);
       setAbout(profileData.data.about || {});
       setAchievements(profileData.data.achievements || []);
-      setSkills(profileData.data.skills.skills || []);
-      setSocialLinks(profileData.data.socialLinks.links || {});
+      setSkills(profileData.data.skills?.skills || []);
+      
+
+      setSocialLinks(profileData.data.socialLinks?.links || {});
       setContribution(profileData.data.contributions || []);
   
     } catch (err) {
@@ -241,9 +243,10 @@ export default function ProfilePage() {
         {/* LinkedIn-style Profile Header */}
         <div className="relative -mt-20 mb-8">
             <ProfileSection
-              title="Profile"
+              title=""
               editMode={editMode.profiles}
               onToggleEdit={isOwnProfile ? () => toggleEditMode("profiles") : null}
+              
                             ViewComponent={<ProfileView profile={profile} />}
               EditComponent={<ProfileEditForm profile={profile} onSave={(data) => handleSave("profiles", data)} />}
             />
