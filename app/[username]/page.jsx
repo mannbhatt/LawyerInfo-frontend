@@ -243,7 +243,7 @@ export default function ProfilePage() {
         {/* LinkedIn-style Profile Header */}
         <div className="relative -mt-20 mb-8">
             <ProfileSection
-              title=""
+              title="Profile"
               editMode={editMode.profiles}
               onToggleEdit={isOwnProfile ? () => toggleEditMode("profiles") : null}
               
