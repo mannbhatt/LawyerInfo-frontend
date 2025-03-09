@@ -56,7 +56,7 @@ const AboutView = ({ about }) => {
             {about.hobbies.map((hobby, idx) => (
               <span
                 key={idx}
-                className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-[#ffefdb] text-[#591B0C]"
+                className="inline-flex items-center px-3 py-1 text-sm font-medium bg-[#ffefdb] text-[#591B0C]"
               >
                 {hobby}
               </span>
