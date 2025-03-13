@@ -55,16 +55,7 @@ const SkillsEditForm = ({ skills, onSave }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="bg-gradient-to-r from-primary to-dark p-4 rounded-lg text-white mb-6">
-        <h3 className="font-semibold flex items-center gap-2">
-          <Award className="h-5 w-5" />
-          Showcase Your Legal Expertise
-        </h3>
-        <p className="text-sm mt-1 opacity-90">
-          Add skills that highlight your legal expertise and specializations to help clients find you.
-        </p>
-      </div>
-
+    
       <div>
         <label htmlFor="newSkill" className={styles.label}>
           Add a Skill
@@ -80,7 +71,7 @@ const SkillsEditForm = ({ skills, onSave }) => {
                 setError("")
               }}
               onKeyDown={handleKeyDown}
-              className={`${styles.input} ${error ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""} pl-11`}
+              className={`${styles.input} ${error ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""} pl-11 h-[40px]`}
               placeholder="e.g., Corporate Law, Contract Negotiation, Litigation"
             />
             <Award className="absolute left-3 top-1/2 -translate-y-1/2 text-primary w-5 h-5" />
@@ -100,13 +91,13 @@ const SkillsEditForm = ({ skills, onSave }) => {
             {formState.map((skill, index) => (
               <div
                 key={index}
-                className="group flex items-center bg-white border-2 border-primary text-primary px-3 py-1.5 rounded-full text-sm font-medium hover:bg-primary hover:text-white transition-colors duration-200"
+                className="group  inline-flex items-center justify-center gap-2 px-4 py-2 bg-white text-[#591B0C] border-2 border-[#591B0C] rounded-md hover:bg-[#ffefdb] transition-colors"
               >
                 {skill}
                 <button
                   type="button"
                   onClick={() => handleRemoveSkill(index)}
-                  className="ml-2 text-primary group-hover:text-white focus:outline-none"
+                  className="ml-2 text-primary group-hover:text-[#591B0C] focus:outline-none"
                   aria-label={`Remove ${skill}`}
                 >
                   <X className="w-4 h-4" />

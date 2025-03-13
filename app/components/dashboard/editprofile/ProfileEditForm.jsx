@@ -1,27 +1,53 @@
 "use client"
 
 import { useState } from "react"
-import { Save, User, Mail, Phone, Calendar, Image, FileText } from "lucide-react"
+import { Save, User, Mail, Phone, Calendar, FileText } from "lucide-react"
 import { formStyles as styles } from "../../ui/form_styles"
 import Imgupload from "../../imgupload"
+
 const ProfileEditForm = ({ profile, onSave }) => {
+  // Initialize form state with profile data
   const [formState, setFormState] = useState(profile || {})
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({})
-  const [uploadedImage, setUploadedImage] = useState("");  
-  const [imageKey,setImageKey]=useState("");
+
+  // Initialize image states with profile's existing values
+  const [uploadedImage, setUploadedImage] = useState(profile?.profileImage || "")
+  const [imageKey, setImageKey] = useState(profile?.imageKey || "")
+
+  // Handle regular form field changes
   const handleChange = (e) => {
     const { name, value } = e.target
-      setFormState((prev) => ({
-        ...prev,
-        [name]: value,
-      }))
+    setFormState((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
 
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: null }))
     }
   }
-  
+
+  // Handle image upload completion
+  const handleImageUpload = (imageUrl) => {
+    setUploadedImage(imageUrl)
+    // Update the form state with the new image URL
+    setFormState((prev) => ({
+      ...prev,
+      profileImage: imageUrl,
+    }))
+  }
+
+  // Handle image key change
+  const handleImageKeyChange = (key) => {
+    setImageKey(key)
+    // Update the form state with the new image key
+    setFormState((prev) => ({
+      ...prev,
+      imageKey: key,
+    }))
+  }
+
   const validateForm = () => {
     const newErrors = {}
 
@@ -29,7 +55,7 @@ const ProfileEditForm = ({ profile, onSave }) => {
       newErrors.fullName = "Full name is required"
     }
     if (!formState.city?.trim()) {
-      newErrors.city = "city is required"
+      newErrors.city = "City is required"
     }
 
     if (!formState.email?.trim()) {
@@ -42,23 +68,19 @@ const ProfileEditForm = ({ profile, onSave }) => {
       newErrors.phone = "Invalid phone number format"
     }
 
-    if (formState.profileImage && !/^https?:\/\/.+/.test(formState.profileImage)) {
-      newErrors.profileImage = "Invalid URL format"
-    }
-
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
-  
-  
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (!validateForm()) return;
-    
+    e.preventDefault()
+
+    if (!validateForm()) return
+
     setLoading(true)
     try {
-      await onSave({ ...formState, profileImage: uploadedImage, imageKey: imageKey })
+      // Only send the form state which now correctly includes image data
+      await onSave(formState)
       // Success notification could be added here
     } catch (error) {
       console.error("Error saving profile:", error)
@@ -147,17 +169,6 @@ const ProfileEditForm = ({ profile, onSave }) => {
             <option value="other">Other</option>
           </select>
           <User className="absolute left-3 top-1/2 -translate-y-1/2 text-primary w-5 h-5" />
-          <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-            <svg
-              className="w-5 h-5 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-            </svg>
-          </div>
         </div>
       </div>
 
@@ -178,20 +189,17 @@ const ProfileEditForm = ({ profile, onSave }) => {
         </div>
       </div>
 
-      
-        {errors.profileImage && <p className="mt-1 text-sm text-red-500">{errors.profileImage}</p>}
-        <div className="">
-              <label className="flex text-sm   font-medium text-gray-700">
-                <Image size={16} className="text-[#591B0C]" /> Profile Image
-              </label>
-              <Imgupload onUploadComplete={setUploadedImage} onImageKeyChange={setImageKey}/>
-             
-            </div>
-        
-            
-     
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Profile Image</label>
+        <Imgupload
+          onUploadComplete={handleImageUpload}
+          onImageKeyChange={handleImageKeyChange}
+          initialImage={profile?.profileImage || ""}
+          initialImageKey={profile?.imageKey || ""}
+        />
+      </div>
 
-      <div className={styles.fullWidth}>
+      <div className="">
         <label htmlFor="bio" className={styles.label}>
           Bio
         </label>
@@ -202,15 +210,17 @@ const ProfileEditForm = ({ profile, onSave }) => {
             value={formState.bio || ""}
             onChange={handleChange}
             rows={4}
-            className={`${styles.textarea} pl-11`}
+            className={`${styles.textarea} pl-11 h-[190px]`}
             placeholder="Tell us about yourself and your legal practice..."
           />
           <FileText className="absolute left-3 top-6 text-primary w-5 h-5" />
         </div>
-        </div>
+      </div>
+
+      <div className={styles.fullWidth}>
         <div className="relative">
           <label htmlFor="city" className={styles.label}>
-            city <span className="text-red-500">*</span>
+            City <span className="text-red-500">*</span>
           </label>
           <div className="relative">
             <input
@@ -219,11 +229,13 @@ const ProfileEditForm = ({ profile, onSave }) => {
               name="city"
               value={formState.city || ""}
               onChange={handleChange}
-              className={`${styles.input} ${errors.city ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""} pl-11`}
-              placeholder="India"
+              className={`${styles.input} ${errors.city ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""} pl-11 w-full`}
+              placeholder="New York"
             />
             <User className="absolute left-3 top-1/2 -translate-y-1/2 text-primary w-5 h-5" />
           </div>
+          {errors.city && <p className="mt-1 text-sm text-red-500">{errors.city}</p>}
+        </div>
       </div>
 
       <div className={styles.fullWidth}>

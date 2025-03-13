@@ -211,9 +211,9 @@ const EducationForm = ({ nextStep, skipStep, userId }) => {
       <h2 className="text-4xl text-center font-bold mb-6 text-[#591B0C]">Create Your Profile</h2>
       <div className="mb-6 bg-[#ffefdb] p-4 rounded-lg">
         <div className="w-full bg-[#ffdbb5] rounded-full h-2.5">
-          <div className="bg-[#591B0C] h-2.5 rounded-full" style={{ width: "33%" }}></div>
+          <div className="bg-[#591B0C] h-2.5 rounded-full" style={{ width: "14%" }}></div>
         </div>
-        <p className="text-center text-sm mt-2 text-[#591B0C]">Step 3 of 9: Education Information</p>
+        <p className="text-center text-sm mt-2 text-[#591B0C]">Step 2 of 8: Education Information</p>
       </div>
       <form className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -270,7 +270,7 @@ const EducationForm = ({ nextStep, skipStep, userId }) => {
               value={educationData.degree}
               onChange={handleInputChange}
               className="mt-1 block w-full h-9 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] outline-none sm:text-sm px-3"
-              placeholder="Bachelor of Science, Master's, etc."
+              placeholder="LLB, Master's, etc."
               required
             />
             {errors.degree && <p className="mt-1 text-sm text-red-600">{errors.degree}</p>}

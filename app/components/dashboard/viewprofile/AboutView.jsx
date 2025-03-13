@@ -1,5 +1,6 @@
 import { FileText, Award, Heart, Globe } from "lucide-react"
 import { profileStyles as styles } from "../../ui/profile_styles"
+import React from "react";
 
 const AboutView = ({ about }) => {
   if (!about || Object.keys(about).length === 0) {
@@ -16,12 +17,20 @@ const AboutView = ({ about }) => {
       {about.summary && (
         <div>
           <h3 className={styles.heading.secondary}>
-            <span className="flex items-center gap-2">
+            <span className="flex items-center  gap-2">
               <FileText className="w-5 h-5 text-[#591B0C]" />
               Professional Summary
             </span>
           </h3>
-          <p className="text-gray-700 leading-relaxed mt-2">{about.summary}</p>
+          <p className="text-gray-700 text-justify leading-relaxed mt-2">
+  {about.summary.split("\n").map((line, index) => (
+    <React.Fragment key={index}>
+      {line}
+      <br />
+    </React.Fragment>
+  ))}
+</p>
+
         </div>
       )}
 
@@ -56,7 +65,7 @@ const AboutView = ({ about }) => {
             {about.hobbies.map((hobby, idx) => (
               <span
                 key={idx}
-                className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-[#ffefdb] text-[#591B0C]"
+                className="inline-flex items-center px-3 py-1  text-sm font-medium bg-[#ffefdb] text-[#591B0C]"
               >
                 {hobby}
               </span>

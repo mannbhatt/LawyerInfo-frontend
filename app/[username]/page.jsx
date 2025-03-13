@@ -33,6 +33,7 @@ export default function ProfilePage() {
   const [about, setAbout] = useState({})
   const [achievements, setAchievements] = useState([])
   const [skills, setSkills] = useState([])
+  const [users,SetUsers]=useState(null)
   const [socialLinks, setSocialLinks] = useState({})
   const [contribution, setContribution] = useState([])
   const [loading, setLoading] = useState(true)
@@ -113,7 +114,7 @@ export default function ProfilePage() {
       setAbout(profileData.data.about || {});
       setAchievements(profileData.data.achievements || []);
       setSkills(profileData.data.skills?.skills || []);
-      
+      SetUsers(profileData.data.users ||null)
 
       setSocialLinks(profileData.data.socialLinks?.links || {});
       setContribution(profileData.data.contributions || []);
@@ -243,7 +244,7 @@ export default function ProfilePage() {
         {/* LinkedIn-style Profile Header */}
         <div className="relative -mt-20 mb-8">
             <ProfileSection
-              title=""
+              title="Profile"
               editMode={editMode.profiles}
               onToggleEdit={isOwnProfile ? () => toggleEditMode("profiles") : null}
               
@@ -338,67 +339,7 @@ export default function ProfilePage() {
             />
 
             {/* Contact Card */}
-            {profile && (
-              <div className="bg-white  shadow-md overflow-hidden border border-gray-100">
-                <div className="px-6 py-4 bg-gradient-to-r from-[#591B0C] to-[#3d1208] text-white">
-                  <h2 className="text-xl font-semibold">Contact Information</h2>
-                </div>
-                <div className="p-6 space-y-4">
-                  {profile.email && (
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10  bg-[#591B0C]/10 flex items-center justify-center">
-                        <Mail className="h-5 w-5 text-[#591B0C]" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-500">Email</p>
-                        <a href={`mailto:${profile.email}`} className="text-[#591B0C] font-medium">
-                          {profile.email}
-                        </a>
-                      </div>
-                    </div>
-                  )}
-
-                  {profile.phone && (
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10  bg-[#591B0C]/10 flex items-center justify-center">
-                        <Phone className="h-5 w-5 text-[#591B0C]" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-500">Phone</p>
-                        <a href={`tel:${profile.phone}`} className="text-[#591B0C] font-medium">
-                          {profile.phone}
-                        </a>
-                      </div>
-                    </div>
-                  )}
-
-                  {profile.location && (
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10  bg-[#591B0C]/10 flex items-center justify-center">
-                        <MapPin className="h-5 w-5 text-[#591B0C]" />
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-500">Location</p>
-                        <p className="text-[#591B0C] font-medium">{profile.location}</p>
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="pt-4 mt-4 border-t border-gray-100">
-                    <button
-                      className="w-full py-2 bg-[#ff3003] text-white  hover:bg-[#d62a03] transition-colors flex items-center justify-center gap-2"
-                      onClick={() => {
-                        navigator.clipboard.writeText(window.location.href)
-                        alert("Profile link copied to clipboard!")
-                      }}
-                    >
-                      <Share2 className="w-4 h-4" />
-                      Share Profile
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
+           
           </div>
         </div>
       </div>

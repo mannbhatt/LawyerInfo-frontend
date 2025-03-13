@@ -22,7 +22,7 @@ export const profileStyles = {
   cardBody: "p-6",
   skillTag:
     "inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-[#ffefdb] text-[#591B0C] border border-[#ffdbb5]",
-  dateTag: "flex items-center gap-1 bg-[#ffefdb] text-[#591B0C] px-3 py-1 rounded-full text-sm font-medium",
+  dateTag: "flex items-center gap-1 bg-[#ffefdb] text-[#591B0C] px-3 py-1  text-sm font-medium",
   iconContainer: "w-10 h-10 rounded-full bg-[#591B0C]/10 flex items-center justify-center",
 }
 

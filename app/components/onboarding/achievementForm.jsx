@@ -109,9 +109,9 @@ const AchievementForm = ({ nextStep, thisStep, skipStep, userId }) => {
        <h2 className="text-4xl text-center font-bold mb-6 text-[#591B0C]">Create Your Profile</h2>
       <div className="mb-6 bg-[#ffefdb] p-4">
         <div className="w-full bg-[#ffdbb5] rounded-full h-2.5">
-          <div className="bg-[#591B0C] h-2.5 rounded-full" style={{ width: '77%' }}></div>
+          <div className="bg-[#591B0C] h-2.5 rounded-full" style={{ width: '70%' }}></div>
         </div>
-        <p className="text-center text-sm mt-2 text-[#591B0C]">Step 7 of 9:Add Your Achievements</p>
+        <p className="text-center text-sm mt-2 text-[#591B0C]">Step 6 of 8:Add Your Achievements</p>
       </div>
       <form className="space-y-4">
         
@@ -120,16 +120,16 @@ const AchievementForm = ({ nextStep, thisStep, skipStep, userId }) => {
          
         
         <div className="">
-              <label className="block text-sm   font-medium text-gray-700  items-center">
-                <Building className="h-5 w-5 mr-2 text-[#591B0C]" /> Profile Image
+              <label className="flex text-sm   font-medium text-gray-700  items-center">
+                <Building size={16} className="h-5 w-5 mr-2 text-[#591B0C]" /> Profile Image
               </label>
               <Imgupload onUploadComplete={setUploadedImage} onImageKeyChange={setImageKey}/>
               {imageUploadWarning && <p className="text-sm text-red-600">{imageUploadWarning}</p>}
             </div>
         <div className="flex flex-col justify-between">
         <div>
-          <label className="block text-sm font-medium text-gray-700  items-center">
-            <Briefcase className="h-5 w-5 mr-2 text-[#591B0C]" /> Certificate Name
+          <label className="flex text-sm font-medium text-gray-700  items-center">
+            <Briefcase size={16} className="h-5 w-5 mr-2 text-[#591B0C]" /> Certificate Name
             </label><input
               type="text"
               name="certificate_name"
@@ -142,8 +142,8 @@ const AchievementForm = ({ nextStep, thisStep, skipStep, userId }) => {
           {errors.certificate_name && <p className="text-sm text-red-600">{errors.certificate_name}</p>}
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700  items-center">
-            <Building className="h-5 w-5 mr-2 text-[#591B0C]" /> Issuing Organization
+          <label className="flex text-sm font-medium text-gray-700  items-center">
+            <Building size={16} className="h-5 w-5 mr-2 text-[#591B0C]" /> Issuing Organization
             </label>  <input
               type="text"
               name="issuing_organization"
@@ -156,8 +156,8 @@ const AchievementForm = ({ nextStep, thisStep, skipStep, userId }) => {
           {errors.issuing_organization && <p className="text-sm text-red-600">{errors.issuing_organization}</p>}
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700  items-center">
-            <Calendar className="h-5 w-5 mr-2 text-[#591B0C]" /> Issue Date
+          <label className="flex text-sm font-medium text-gray-700  items-center">
+            <Calendar size={16} className="h-5 w-5 mr-2 text-[#591B0C]" /> Issue Date
             </label>   <input
               type="date"
               name="issue_date"
@@ -175,8 +175,8 @@ const AchievementForm = ({ nextStep, thisStep, skipStep, userId }) => {
         </div>
         </div>
         <div>
-        <label className="block text-sm font-medium text-gray-700  items-center">
-            <FileText className="h-5 w-5 mr-2" /> Credential URL (optional)
+        <label className="flex text-sm font-medium text-gray-700  items-center">
+            <FileText size={16} className="h-5 w-5 mr-2" /> Credential URL (optional)
             </label><input
               type="text"
               name="credential_url"
@@ -191,15 +191,15 @@ const AchievementForm = ({ nextStep, thisStep, skipStep, userId }) => {
           <button
             type="button"
             onClick={skipStep}
-            className="px-6 py-2 bg-[#591B0C] text-white hover:bg-[#ff3003]"
+            className="px-6 py-2 bg-[#591B0C] hover:bg-[#ff3003] text-white rounded-md transition-colors duration-300"
           >
             Skip
           </button>
-          <div className="flex justify-between w-[24%]">
+          <div className="flex justify-between gap-4">
             <button 
               type="button" 
               onClick={() => submitCertificationData(false)}
-              className="px-6 py-2 bg-[#591B0C] text-white hover:bg-[#ff3003] text-sm"
+              className="px-6 py-2 border border-[#591B0C] text-[#591B0C] rounded-md hover:bg-[#ffefdb] transition-colors duration-300"
               disabled={loading}
             >
               {loading ? "Saving..." : "Add More"}
@@ -207,7 +207,7 @@ const AchievementForm = ({ nextStep, thisStep, skipStep, userId }) => {
             <button 
               type="button" 
               onClick={() => submitCertificationData(true)}
-              className="px-6 py-2 bg-[#591B0C] text-white hover:bg-[#ff3003]"
+              className="px-6 py-2 bg-[#591B0C] hover:bg-[#ff3003] text-white rounded-md transition-colors duration-300"
               disabled={loading}
             >
               {loading ? "Saving..." : "Next"}

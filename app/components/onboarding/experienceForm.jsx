@@ -206,16 +206,16 @@ const ExperienceForm = ({ nextStep, thisStep, skipStep, userId }) => {
       <h2 className="text-4xl text-center font-bold mb-6 text-[#591B0C]">Create Your Profile</h2>
       <div className="mb-6 bg-[#ffefdb] p-4 rounded-lg">
         <div className="w-full bg-[#ffdbb5] rounded-full h-2.5">
-          <div className="bg-[#591B0C] h-2.5 rounded-full" style={{ width: "44%" }}></div>
+          <div className="bg-[#591B0C] h-2.5 rounded-full" style={{ width: "28%" }}></div>
         </div>
-        <p className="text-center text-sm mt-2 text-[#591B0C]">Step 4 of 9: Experience Information</p>
+        <p className="text-center text-sm mt-2 text-[#591B0C]">Step 3 of 8: Experience Information</p>
       </div>
       <form className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="relative" ref={dropdownRef}>
-            <label className="block text-sm font-medium text-gray-700  items-center">
+            <label className="flex text-sm font-medium text-gray-700  items-center">
               <Building className="w-4 h-4 mr-2 text-[#591B0C]" />
-              Company
+              Organization
             </label>
             <input
               type="text"
@@ -224,7 +224,7 @@ const ExperienceForm = ({ nextStep, thisStep, skipStep, userId }) => {
               onChange={handleInputChange}
               onFocus={() => setShowDropdown(true)}
               className="mt-1 block w-full h-9 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] outline-none sm:text-sm px-3"
-              placeholder="Search for company..."
+              placeholder="Law Firm Name..."
               required
             />
             {errors.company && <p className="mt-1 text-sm text-red-600">{errors.company}</p>}
@@ -257,7 +257,7 @@ const ExperienceForm = ({ nextStep, thisStep, skipStep, userId }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700  items-center">
+            <label className="flex text-sm font-medium text-gray-700  items-center">
               <Briefcase className="w-4 h-4 mr-2 text-[#591B0C]" />
               Position
             </label>
@@ -267,14 +267,14 @@ const ExperienceForm = ({ nextStep, thisStep, skipStep, userId }) => {
               value={experienceData.position}
               onChange={handleInputChange}
               className="mt-1 block w-full h-9 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] outline-none sm:text-sm px-3"
-              placeholder="Software Engineer, Project Manager, etc."
+              placeholder="Senior Attorney,Legal Consultant,etc..."
               required
             />
             {errors.position && <p className="mt-1 text-sm text-red-600">{errors.position}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700  items-center">
+            <label className="flex text-sm font-medium text-gray-700  items-center">
               <Calendar className="w-4 h-4 mr-2 text-[#591B0C]" />
               Start Date
             </label>
@@ -290,7 +290,7 @@ const ExperienceForm = ({ nextStep, thisStep, skipStep, userId }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700  items-center">
+            <label className="flex text-sm font-medium text-gray-700  items-center">
               <Calendar className="w-4 h-4 mr-2 text-[#591B0C]" />
               End Date
             </label>
@@ -323,7 +323,7 @@ const ExperienceForm = ({ nextStep, thisStep, skipStep, userId }) => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700  items-center">
+          <label className="flex text-sm font-medium text-gray-700  items-center">
             <FileText className="w-4 h-4 mr-2 text-[#591B0C]" />
             Description
           </label>
@@ -332,7 +332,7 @@ const ExperienceForm = ({ nextStep, thisStep, skipStep, userId }) => {
             value={experienceData.description}
             onChange={handleInputChange}
             className="mt-1 block w-full h-20 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] outline-none sm:text-sm px-3 py-2"
-            placeholder="Describe your responsibilities, achievements, and projects..."
+            placeholder="describe your firm's legal expertise and practice areas,etc..."
             required
           />
           {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description}</p>}

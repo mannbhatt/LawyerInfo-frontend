@@ -44,7 +44,6 @@ const AchievementsEditForm = ({ achievements, onSave }) => {
     setAchievementList(achievementList.filter((_, i) => i !== index))
     setErrors(errors.filter((_, i) => i !== index))
   }
-
   const validateForm = () => {
     let isValid = true
     const newErrors = achievementList.map((ach) => {
@@ -81,7 +80,13 @@ const AchievementsEditForm = ({ achievements, onSave }) => {
     setErrors(newErrors)
     return isValid
   }
-
+  const handleImageUpload = (index, imageUrl, imageKey) => {
+    const newList = [...achievementList]
+    newList[index].certificate_image = imageUrl
+    newList[index].imageKey = imageKey
+    setAchievementList(newList)
+  }
+  
   const handleSubmit = async (e) => {
    
     e.preventDefault()
@@ -90,11 +95,11 @@ const AchievementsEditForm = ({ achievements, onSave }) => {
    
     setLoading(true)
     try {
-      await onSave(achievementList.map(ach => ({
+      await onSave(achievementList /*.map(ach => ({
         ...ach,
         certificate_image: uploadedImage,
         imageKey: imageKey,
-      })))
+      }))*/)
       
     } catch (error) {
       console.error("Error saving achievements:", error)
@@ -216,8 +221,12 @@ const AchievementsEditForm = ({ achievements, onSave }) => {
                   <label htmlFor={`certificate_image-${index}`} className={styles.label}>
                     Certificate Image URL
                   </label>
-                  <Imgupload onUploadComplete={setUploadedImage} onImageKeyChange={setImageKey}/>
-                 </div>
+                  <Imgupload
+  onUploadComplete={(imageUrl) => handleImageUpload(index, imageUrl, achievementList[index].imageKey)}
+  onImageKeyChange={(imageKey) => handleImageUpload(index, achievementList[index].certificate_image, imageKey)}
+  initialImage={ach.certificate_image}
+  initialImageKey={ach.imageKey}
+/>                 </div>
               </div>
             </div>
           ))}

@@ -85,9 +85,9 @@ const SkillsForm = ({ nextStep, thisStep, skipStep, userId }) => {
       <h2 className="text-4xl text-center font-bold mb-6 text-[#591B0C]">Create Your Profile</h2>
       <div className="mb-6 bg-[#ffefdb] p-4">
       <div className="w-full bg-[#ffdbb5] rounded-full h-2.5">
-          <div className="bg-[#591B0C] h-2.5 rounded-full" style={{ width: '66%' }}></div>
+          <div className="bg-[#591B0C] h-2.5 rounded-full" style={{ width: '56%' }}></div>
         </div>
-        <p className="text-center text-sm text-[#591B0C] mt-2">Step 6 of 9: Add Your Skills</p>
+        <p className="text-center text-sm text-[#591B0C] mt-2">Step 5 of 8: Add Your Skills</p>
       </div>
       <label className="flex text-sm font-medium text-gray-700  items-center">
         <Code className="w-4 h-4 mr-2 text-[#591B0C]" />
@@ -104,7 +104,7 @@ const SkillsForm = ({ nextStep, thisStep, skipStep, userId }) => {
         <button
           type="button"
           onClick={addSkill}
-          className="px-6 py-2 h-9 bg-[#591B0C] hover:bg-[#ff3003] text-white"
+          className="px-6 py-2 border border-[#591B0C] text-[#591B0C] rounded-md hover:bg-[#ffefdb] transition-colors duration-300"
         >
         Add Skill
         </button>
@@ -130,15 +130,7 @@ const SkillsForm = ({ nextStep, thisStep, skipStep, userId }) => {
         >
           Skip
         </button>
-        <div className="flex justify-between w-[24%]">
-          <button
-            type="button"
-            onClick={() => submitSkillsData(false)}
-            className="px-6 py-2 bg-[#591B0C] text-white hover:bg-[#ff3003]"
-            disabled={loading}
-          >
-            {loading ? "Saving..." : "Add More"}
-          </button>
+        
           <button
             type="button"
             onClick={() => submitSkillsData(true)}
@@ -147,7 +139,7 @@ const SkillsForm = ({ nextStep, thisStep, skipStep, userId }) => {
           >
             {loading ? "Saving..." : "Next"}
           </button>
-        </div>
+       
       </div>
     </div>
   );

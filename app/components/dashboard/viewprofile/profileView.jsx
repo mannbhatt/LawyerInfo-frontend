@@ -16,7 +16,7 @@ const ProfileView = ({ profile }) => {
     <div className={`${styles.container} mx-auto`}>
       <div className="flex flex-col md:flex-row gap-6">
         {/* Profile Image */}
-        <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white shadow-lg mx-auto md:mx-0">
+        <div className="relative w-32 h-32 md:w-40 md:h-40 border-4 border-white shadow-lg mx-auto md:mx-0">
           <Image
             src={profile?.profileImage || "/placeholder.svg?height=160&width=160"}
             alt={profile?.fullName || "Profile"}
@@ -33,30 +33,31 @@ const ProfileView = ({ profile }) => {
                 {profile?.fullName  || username}
               </h1>
               {profile?.bio && (
-            <div className="mt-2 sm:w-full lg:w-[50%] text-gray-700">
-              <p className="line-clamp-3">{profile.bio}</p>
+            <div className="mt-2 sm:w-full  lg:w-[58%] text-gray-700">
+              <p className=" text-justify  ">{profile.bio}</p>
             </div>
           )}
-               <div className=" flex gap-6 mt-2">
+               <div className="flex  justify-between flex-row gap-6 mt-2 sm:w-full  lg:w-[58%]">
               {profile?.city && (
-                <div className=" flex items-center justify-center md:justify-start gap-2 text-gray-700 ">
+                <div className="flex  justify-center md:justify-start gap-2 text-gray-700 ">
                   <MapPin className="w-4 h-4 text-[#591B0C]" />
                   <span>{profile.city}</span>
                 </div>
               )}
-              
+              <div className="flex flex-col md:flex-row  md:gap-4">
               {profile?.city && (
-            <div className="flex items-center justify-center md:justify-start gap-2 text-gray-700 ">
+            <div className="flex items-center  md:justify-start gap-2 text-gray-700 ">
               <Mail className="w-4 h-4 text-[#591B0C]" />
               <span>{profile.email || "N/A"}</span>
             </div>
               )}
             {profile.phone && (
-              <div className="flex items-center justify-center md:justify-start gap-2 text-gray-700 ">
+              <div className="flex items-center  md:justify-start gap-2 text-gray-700 ">
                 <Phone className="w-4 h-4 text-[#591B0C]" />
                 <span>{profile.phone}</span>
               </div>
             )}
+            </div>
             </div>
             </div>
 

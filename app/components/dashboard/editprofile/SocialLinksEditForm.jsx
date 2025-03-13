@@ -15,8 +15,8 @@ const SocialLinksEditForm = ({ socialLinks, onSave }) => {
     { name: "instagram", icon: Instagram, color: "#E1306C", placeholder: "https://instagram.com/yourusername" },
     { name: "facebook", icon: Facebook, color: "#1877F2", placeholder: "https://facebook.com/yourprofile" },
     { name: "youtube", icon: Youtube, color: "#FF0000", placeholder: "https://youtube.com/c/yourchannel" },
-    { name: "github", icon: Github, color: "#333333", placeholder: "https://github.com/yourusername" },
-    { name: "website", icon: Globe, color: "#4CAF50", placeholder: "https://yourwebsite.com" },
+   
+    
   ]
 
   const handleChange = (platform, value) => {
@@ -60,38 +60,14 @@ const SocialLinksEditForm = ({ socialLinks, onSave }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="bg-gradient-to-r from-primary to-dark p-4 rounded-lg text-white mb-6">
-        <h3 className="font-semibold flex items-center gap-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          Connect with clients and colleagues
-        </h3>
-        <p className="text-sm mt-1 opacity-90">
-          Adding your social media profiles helps potential clients find and connect with you across platforms.
-        </p>
-      </div>
+      
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
         {socialPlatforms.map((platform) => {
           const Icon = platform.icon
           return (
             <div key={platform.name} className="group">
-              <label htmlFor={platform.name} className={styles.label + " capitalize flex items-center gap-2"}>
-                <Icon className="w-4 h-4" style={{ color: platform.color }} />
-                {platform.name}
-              </label>
+              
               <div className="relative">
                 <input
                   id={platform.name}

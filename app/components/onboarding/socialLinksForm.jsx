@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import 'tailwindcss/tailwind.css';
-
+import { useToast } from "../ui/toast"
 const SocialLinksForm = ({ nextStep, thisStep, skipStep, userId }) => {
   const [socialLinks, setSocialLinks] = useState({
     linkedin: "",
@@ -11,6 +11,7 @@ const SocialLinksForm = ({ nextStep, thisStep, skipStep, userId }) => {
     facebook: "",
     youtube: ""
   });
+  const { success, error } = useToast()
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const socialIcons = {
@@ -144,14 +145,14 @@ const SocialLinksForm = ({ nextStep, thisStep, skipStep, userId }) => {
 
       const data = await response.json();
       if (response.ok) {
-        alert("Social links updated successfully!");
+        success("Social links updated successfully!");
         if (redirectAfterSubmit) {
           window.location.href = "/";
         } else {
           thisStep();
         }
       } else {
-        alert(data.message || "Failed to update social links.");
+        error(data.message || "Failed to update social links.");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -169,7 +170,7 @@ const SocialLinksForm = ({ nextStep, thisStep, skipStep, userId }) => {
         <div className="w-full bg-[#ffdbb5] rounded-full h-2.5">
           <div className="bg-[#591B0C] h-2.5 rounded-full" style={{ width: '100%' }}></div>
         </div>
-        <p className="text-center text-sm mt-2 text-[#591B0C]">Step 9 of 9: Add Your Social Links</p>
+        <p className="text-center text-sm mt-2 text-[#591B0C]">Step 8 of 8: Add Your Social Links</p>
       </div>
       {Object.keys(socialLinks).map((platform) => (
         <div key={platform} className="mb-4">

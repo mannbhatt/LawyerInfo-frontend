@@ -87,13 +87,8 @@ const RegisterForm = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-8 bg-white shadow-lg border border-gray-200">
-      <h2 className="text-4xl font-bold mb-6 text-[#591B0C] text-center">Create your account</h2>
-      <div className="mb-6 bg-[#ffefdb] p-4">
-        <div className="w-full bg-[#ffdbb5] rounded-full h-2.5">
-          <div className="bg-[#591B0C] h-2.5 rounded-full" style={{ width: "11%" }}></div>
-        </div>
-        <p className="text-center text-sm mt-2 text-[#591B0C]">Step 1 of 9: Account Information</p>
-      </div>
+      <h2 className="text-4xl font-bold mb-6 text-[#591B0C] text-center">Sign Up your account</h2>
+      
       <form onSubmit={handleRegister} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
@@ -106,7 +101,7 @@ const RegisterForm = () => {
               name="username"
               type="text"
               required
-              className="mt-1 block w-full h-9 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] focus:ring-[#ff3003] sm:text-sm"
+              className="mt-1 block w-full h-9 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] focus:ring-[#ff3003] outline-none sm:text-sm"
               placeholder="Username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -124,7 +119,7 @@ const RegisterForm = () => {
               type="email"
               autoComplete="email"
               required
-              className="mt-1 block w-full h-9 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] focus:ring-[#ff3003] sm:text-sm"
+              className="mt-1 block w-full h-9 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] focus:ring-[#ff3003] outline-none sm:text-sm"
               placeholder="Email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -142,7 +137,7 @@ const RegisterForm = () => {
               type="password"
               autoComplete="new-password"
               required
-              className="mt-1 block w-full h-9 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] focus:ring-[#ff3003] sm:text-sm"
+              className="mt-1 block w-full h-9 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] focus:ring-[#ff3003] outline-none  sm:text-sm"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -159,7 +154,7 @@ const RegisterForm = () => {
               name="confirmPassword"
               type="password"
               required
-              className="mt-1 block w-full h-9 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] focus:ring-[#ff3003] sm:text-sm"
+              className="mt-1 block w-full h-9 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] focus:ring-[#ff3003] outline-none  sm:text-sm"
               placeholder="Confirm Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
@@ -167,11 +162,11 @@ const RegisterForm = () => {
             {errors.confirmPassword && <p className="text-red-600 text-sm">{errors.confirmPassword}</p>}
           </div>
         </div>
-        <div className="flex justify-between mt-8">
+        <div className="flex flex-col mt-8">
           <button
             type="submit"
             disabled={isLoading}
-            className="px-6 py-2 border border-transparent shadow-sm text-sm font-medium text-white bg-[#591B0C] hover:bg-[#ff3003] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ff3003]"
+            className="px-6 py-2 mt-2 border-2  w-full border-transparent shadow-sm text-sm font-medium text-white bg-[#591B0C] hover:bg-[#ff3003] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ff3003]"
           >
             {isLoading ? "Registering..." : "Register"}
           </button>

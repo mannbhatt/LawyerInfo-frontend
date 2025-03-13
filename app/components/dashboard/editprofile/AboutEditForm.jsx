@@ -1,12 +1,14 @@
 "use client"
 
 import { useState } from "react"
-import { Save, FileText, List, Heart, Globe } from "lucide-react"
+import { Save, FileText, List, Heart, Globe, Plus, X } from "lucide-react"
 import { formStyles as styles } from "../../ui/form_styles"
 
 
 const AboutEditForm = ({ about, onSave }) => {
   const [formState, setFormState] = useState(about || { highlights: [], hobbies: [] })
+  const [newHighlight, setNewHighlight] = useState("")
+  const [newHobby, setNewHobby] = useState("")
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState({})
 
@@ -24,19 +26,62 @@ const AboutEditForm = ({ about, onSave }) => {
   }
 
   const handleArrayChange = (e, field) => {
-    const { value } = e.target
-    setFormState((prev) => ({
-      ...prev,
-      [field]: value
-        .split(",")
-        .map((item) => item.trim())
-        .filter((item) => item),
-    }))
+    const { value } = e.target;
+  
+    setFormState((prev) => {
+      // Split input by commas, trim spaces, and remove empty values
+      const updatedArray = value
+        .split(",") // Split by comma
+        .map((item) => item.trim()) // Remove spaces around each item
+        .filter((item) => item.length > 0); // Remove empty values
+        if (errors[field]) {
+          setErrors((prev) => ({ ...prev, [field]: null }))
+        }
+      return {
+        ...prev,
+        [field]: updatedArray, // Store as an array
+      };
+    });
+  };
 
-    // Clear error when field is edited
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: null }))
+  const handleAddHighlight = () => {
+    if (newHighlight.trim() === "") {
+      setErrors((prev) => ({ ...prev, highlights: "Please enter a highlight" }))
+      return
     }
+
+    if (formState.highlights.includes(newHighlight.trim())) {
+      setErrors((prev) => ({ ...prev, highlights: "This highlight is already in your list" }))
+      return
+    }
+
+    setFormState((prev) => ({ ...prev, highlights: [...prev.highlights, newHighlight.trim()] }))
+    setNewHighlight("")
+    setErrors((prev) => ({ ...prev, highlights: "" }))
+  }
+
+  const handleAddHobby = () => {
+    if (newHobby.trim() === "") {
+      setErrors((prev) => ({ ...prev, hobbies: "Please enter a hobby" }))
+      return
+    }
+
+    if (formState.hobbies.includes(newHobby.trim())) {
+      setErrors((prev) => ({ ...prev, hobbies: "This hobby is already in your list" }))
+      return
+    }
+
+    setFormState((prev) => ({ ...prev, hobbies: [...prev.hobbies, newHobby.trim()] }))
+    setNewHobby("")
+    setErrors((prev) => ({ ...prev, hobbies: "" }))
+  }
+
+  const handleRemoveHighlight = (index) => {
+    setFormState((prev) => ({ ...prev, highlights: prev.highlights.filter((_, i) => i !== index) }))
+  }
+
+  const handleRemoveHobby = (index) => {
+    setFormState((prev) => ({ ...prev, hobbies: prev.hobbies.filter((_, i) => i !== index) }))
   }
 
   const validateForm = () => {
@@ -97,18 +142,57 @@ const AboutEditForm = ({ about, onSave }) => {
           Professional Highlights (comma-separated)
         </label>
         <div className="relative">
-          <textarea
-            id="highlights"
-            name="highlights"
-            value={formState.highlights?.join(", ") || ""}
-            onChange={(e) => handleArrayChange(e, "highlights")}
-            rows={3}
-            className={`${styles.textarea} pl-11`}
-            placeholder="Specialized in corporate law, Successfully defended 50+ cases, Published in Harvard Law Review..."
-          />
-          <List className="absolute left-3 top-6 text-primary w-5 h-5" />
+          <div className="flex items-center gap-2">
+            <div className="relative flex-1">
+              <input
+                id="newHighlight"
+                type="text"
+                value={newHighlight}
+                onChange={(e) => {
+                  setNewHighlight(e.target.value)
+                  setErrors((prev) => ({ ...prev, highlights: "" }))
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault()
+                    handleAddHighlight()
+                  }
+                }}
+                className={`${styles.input} ${errors.highlights ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""} pl-11 h-[40px]`}
+                placeholder="e.g., Corporate Law, Contract Negotiation, Litigation"
+              />
+              <List className="absolute left-3 top-1/2 -translate-y-1/2 text-primary w-5 h-5" />
+            </div>
+            <button type="button" onClick={handleAddHighlight} className={styles.button.secondary}>
+              <Plus className="w-5 h-5" />
+              Add
+            </button>
+          </div>
+          {errors.highlights && <p className="mt-1 text-sm text-red-500">{errors.highlights}</p>}
         </div>
-        <p className="mt-1 text-xs text-gray-500">Enter key professional achievements, separated by commas</p>
+        {formState.highlights.length > 0 && (
+          <div className="mt-6">
+            <h3 className={styles.label}>Your Highlights</h3>
+            <div className="flex flex-col gap-2">
+              {formState.highlights.map((highlight, index) => (
+                <div
+                  key={index}
+                  className="group  inline-flex justify-between gap-2 px-4 py-2 bg-white text-[#591B0C] border-2 border-[#591B0C] rounded-md hover:bg-[#ffefdb] transition-colors"
+                >
+                  {highlight}
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveHighlight(index)}
+                    className="ml-2 text-primary group-hover:text-[#591B0C] focus:outline-none"
+                    aria-label={`Remove ${highlight}`}
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className={styles.fullWidth}>
@@ -116,18 +200,57 @@ const AboutEditForm = ({ about, onSave }) => {
           Hobbies & Interests (comma-separated)
         </label>
         <div className="relative">
-          <input
-            id="hobbies"
-            type="text"
-            name="hobbies"
-            value={formState.hobbies?.join(", ") || ""}
-            onChange={(e) => handleArrayChange(e, "hobbies")}
-            className={`${styles.input} pl-11`}
-            placeholder="Reading, Hiking, Chess, Photography..."
-          />
-          <Heart className="absolute left-3 top-1/2 -translate-y-1/2 text-primary w-5 h-5" />
+          <div className="flex items-center gap-2">
+            <div className="relative flex-1">
+              <input
+                id="newHobby"
+                type="text"
+                value={newHobby}
+                onChange={(e) => {
+                  setNewHobby(e.target.value)
+                  setErrors((prev) => ({ ...prev, hobbies: "" }))
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault()
+                    handleAddHobby()
+                  }
+                }}
+                className={`${styles.input} ${errors.hobbies ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""} pl-11 h-[40px]`}
+                placeholder="e.g., Reading, Hiking, Chess, Photography..."
+              />
+              <Heart className="absolute left-3 top-1/2 -translate-y-1/2 text-primary w-5 h-5" />
+            </div>
+            <button type="button" onClick={handleAddHobby} className={styles.button.secondary}>
+              <Plus className="w-5 h-5" />
+              Add
+            </button>
+          </div>
+          {errors.hobbies && <p className="mt-1 text-sm text-red-500">{errors.hobbies}</p>}
         </div>
-        <p className="mt-1 text-xs text-gray-500">Share your interests outside of work to add a personal touch</p>
+        {formState.hobbies.length > 0 && (
+          <div className="mt-6">
+            <h3 className={styles.label}>Your Hobbies</h3>
+            <div className="flex flex-col gap-2">
+              {formState.hobbies.map((hobby, index) => (
+                <div
+                  key={index}
+                  className="group  inline-flex justify-between gap-2 px-4 py-2 bg-white text-[#591B0C] border-2 border-[#591B0C] rounded-md hover:bg-[#ffefdb] transition-colors"
+                >
+                  {hobby}
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveHobby(index)}
+                    className="ml-2 text-primary group-hover:text-[#591B0C] focus:outline-none"
+                    aria-label={`Remove ${hobby}`}
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className={styles.fullWidth}>
@@ -183,4 +306,3 @@ const AboutEditForm = ({ about, onSave }) => {
 }
 
 export default AboutEditForm
-

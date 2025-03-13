@@ -10,7 +10,7 @@ const ContributionForm = ({ nextStep, thisStep, skipStep, userId }) => {
     user_id: userId,
     title: "",
     description: "",
-    category: "Blog",
+    category: "Blog Post",
     external_link: "",
   });
 
@@ -67,7 +67,7 @@ const ContributionForm = ({ nextStep, thisStep, skipStep, userId }) => {
         if (redirectAfterSubmit) {
           nextStep();
         } else {
-          setContributionData({user_id: userId, title: "", description: "", category: "Blog", external_link: "" });
+          setContributionData({user_id: userId, title: "", description: "", category: "Blog Post", external_link: "" });
           thisStep();
         }
       } else {
@@ -85,15 +85,15 @@ const ContributionForm = ({ nextStep, thisStep, skipStep, userId }) => {
        <h2 className="text-4xl text-center font-bold mb-6 text-[#591B0C]">Create Your Profile</h2>
       <div className="mb-6 bg-[#ffefdb] p-4">
         <div className="w-full bg-[#ffdbb5] rounded-full h-2.5">
-          <div className="bg-[#591B0C] h-2.5 rounded-full" style={{ width: '88%' }}></div>
+          <div className="bg-[#591B0C] h-2.5 rounded-full" style={{ width: '84%' }}></div>
         </div>
-        <p className="text-center text-sm mt-2 text-[#591B0C]">Step 8 of 9: Add Your Notable Works</p>
+        <p className="text-center text-sm mt-2 text-[#591B0C]">Step 7 of 8: Add Your Notable Works</p>
       </div>
       <form className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700  items-center">
-            <Briefcase className="h-5 w-5 mr-2 text-[#591B0C]" /> Title
+          <label className="flex text-sm font-medium text-gray-700  items-center">
+            <Briefcase size={16} className="h-5 w-5 mr-2 text-[#591B0C]" /> Title
             </label><input
               type="text"
               name="title"
@@ -106,8 +106,8 @@ const ContributionForm = ({ nextStep, thisStep, skipStep, userId }) => {
           {errors.title && <p className="mt-1 text-sm text-red-600">{errors.title}</p>}
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700  items-center">
-            <Tag className="h-5 w-5 mr-2 text-[#591B0C]" /> Category
+          <label className="flex text-sm font-medium text-gray-700  items-center">
+            <Tag size={16} className="h-5 w-5 mr-2 text-[#591B0C]" /> Category
             </label>
             <select
               name="category"
@@ -115,10 +115,15 @@ const ContributionForm = ({ nextStep, thisStep, skipStep, userId }) => {
               onChange={handleInputChange}
               className="mt-1 block w-full h-9 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] outline-none sm:text-sm"
             >
-              <option value="Blog">Blog</option>
+              <option value="Blog Post">Blog Post</option>
               <option value="Research Paper">Research Paper</option>
-              <option value="Project">Project</option>
-              <option value="Design">Design</option>
+              <option value="Book">Book</option>
+              <option value="Article">Article</option>
+              <option value="Case Study">Case Study</option>
+              <option value="Legal Analysis">Legal Analysis</option>
+              <option value="Conference Paper">Conference Paper</option>
+              <option value="Journal Publication">Journal Publication</option>
+              <option value="White Paper">White Paper</option>
               <option value="Other">Other</option>
             </select>
          
@@ -126,8 +131,8 @@ const ContributionForm = ({ nextStep, thisStep, skipStep, userId }) => {
         </div>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700  items-center">
-            <FileText className="h-5 w-5 mr-2 text-[#591B0C]" /> Description
+          <label className="flex text-sm font-medium text-gray-700  items-center">
+            <FileText size={16} className="h-5 w-5 mr-2 text-[#591B0C]" /> Description
             </label>
             <textarea
               name="description"
@@ -141,8 +146,8 @@ const ContributionForm = ({ nextStep, thisStep, skipStep, userId }) => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700  items-center">
-            <Calendar className="h-5 w-5 mr-2 text-[#591B0C]" /> External Link (Optional)
+          <label className="flex text-sm font-medium text-gray-700  items-center">
+            <Calendar size={16} className="h-5 w-5 mr-2 text-[#591B0C]" /> External Link (Optional)
             </label><input
               type="url"
               name="external_link"
@@ -157,15 +162,15 @@ const ContributionForm = ({ nextStep, thisStep, skipStep, userId }) => {
           <button
             type="button"
             onClick={skipStep}
-            className="px-6 py-2 bg-[#591B0C] hover:bg-[#ff3003] text-white"
+            className="px-6 py-2 bg-[#591B0C] hover:bg-[#ff3003] text-white rounded-md transition-colors duration-300"
           >
             Skip
           </button>
-          <div className="flex justify-between w-[24%]">
+          <div className="flex justify-between gap-4">
             <button 
               type="button" 
               onClick={() => submitContributionData(false)} 
-              className="px-6 py-2 bg-[#591B0C] hover:bg-[#ff3003] text-white text-sm"
+              className="px-6 py-2 border border-[#591B0C] text-[#591B0C] rounded-md hover:bg-[#ffefdb] transition-colors duration-300"
               disabled={loading}
             >
               {loading ? "Saving..." : "Add More"}
@@ -173,7 +178,7 @@ const ContributionForm = ({ nextStep, thisStep, skipStep, userId }) => {
             <button 
               type="button" 
               onClick={() => submitContributionData(true)} 
-              className="px-6 py-2 bg-[#591B0C] hover:bg-[#ff3003] text-white"
+              className="px-6 py-2 bg-[#591B0C] hover:bg-[#ff3003] text-white rounded-md transition-colors duration-300"
               disabled={loading}
             >
               {loading ? "Saving..." : "Next"}

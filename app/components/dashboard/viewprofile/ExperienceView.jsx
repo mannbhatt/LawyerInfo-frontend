@@ -25,9 +25,9 @@ const ExperienceView = ({ experience }) => {
       {experience.map((exp, index) => (
         <div
           key={index}
-          className="p-4 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors duration-200"
+          className=" border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors duration-200"
         >
-          <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-2">
+          <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
             <div>
               <h3 className="text-xl font-semibold text-[#591B0C]">{exp.position}</h3>
               <div className="flex items-center gap-2 text-gray-700 mt-1">
@@ -52,8 +52,8 @@ const ExperienceView = ({ experience }) => {
           </div>
 
           {exp.description && (
-            <div className="mt-3">
-              <p className="text-gray-700 whitespace-pre-line">{exp.description}</p>
+            <div className="mt-4">
+              <p className="text-gray-700 text-justify whitespace-pre-line">{exp.description}</p>
             </div>
           )}
         </div>

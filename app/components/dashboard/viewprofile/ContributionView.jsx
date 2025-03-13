@@ -16,7 +16,7 @@ const ContributionView = ({ contributions }) => {
       {contributions.map((contribution, index) => (
         <div
           key={index}
-          className="p-4 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors duration-200"
+          className=" border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors duration-200"
         >
           <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-2">
             <div>
@@ -37,8 +37,8 @@ const ContributionView = ({ contributions }) => {
             )}
           </div>
 
-          {contribution.description && <p className="mt-3 text-gray-700">{contribution.description}</p>}
-
+          {contribution.description && <p className="mt-3 text-gray-700 text-justify whitespace-pre-wrap">{contribution.description}</p>}
+            
           {contribution.external_link && (
             <a
               href={contribution.external_link}

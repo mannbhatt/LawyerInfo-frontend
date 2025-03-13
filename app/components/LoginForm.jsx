@@ -67,7 +67,8 @@ const LoginForm = () => {
                 name="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full h-9  border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] focus:ring-[#ff3003] sm:text-sm"
+                className="mt-1 block w-full h-9  border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] focus:ring-[#ff3003] outline-none 
+                sm:text-sm"
                 required
               />
             
@@ -82,18 +83,18 @@ const LoginForm = () => {
                 name="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 block w-full h-9  border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] focus:ring-[#ff3003] sm:text-sm"
+                className="mt-1 block w-full h-9  border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] focus:ring-[#ff3003] outline-none sm:text-sm"
                 required
               />
             
           </div>
         </div>
         {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
-        <div className="flex justify-between mt-8">
+        <div className="flex flex-col items-center mt-8">
           <button
             type="submit"
             disabled={isLoading}
-            className="px-6 py-2 border border-transparent  shadow-sm text-sm font-medium text-white bg-[#591B0C] hover:bg-[#ff3003] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ff3003]"
+            className="px-6 py-2 mt-2 border border-transparent w-full shadow-sm text-sm font-medium text-white bg-[#591B0C] hover:bg-[#ff3003] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ff3003]"
           >
             {isLoading ? "Signing in..." : "Sign in"}
           </button>

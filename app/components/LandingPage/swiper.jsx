@@ -86,7 +86,7 @@ export default function ProfilesSlider() {
                     />
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">{profile.name}</h3>
-                  <p className="text-secondary font-medium mb-1">{profile.bio}</p>
+                  <p className="text-secondary line-clamp-3 font-medium mb-1">{profile.bio}</p>
                   <p className="text-gray-500">{profile.city}</p>
                 </div>
               </Link>

@@ -114,9 +114,9 @@ const ProfileForm = ({ nextStep, userId }) => {
       <h2 className="text-4xl text-center font-bold mb-6 text-[#591B0C]">Create Your Profile</h2>
       <div className="mb-6 bg-[#ffefdb]  p-4">
         <div className="w-full bg-[#ffdbb5] rounded-full h-2.5">
-          <div className="bg-[#591B0C] h-2.5 rounded-full" style={{ width: '22%' }}></div>
+          <div className="bg-[#591B0C] h-2.5 rounded-full" style={{ width: '0%' }}></div>
         </div>
-        <p className="text-center text-sm mt-2 text-[#591B0C]">Step 2 of 9: Personal Information</p>
+        <p className="text-center text-sm mt-2 text-[#591B0C]">Step 1 of 8: Personal Information</p>
       </div>
       {loading ? (
         <p>Loading...</p>
@@ -132,7 +132,7 @@ const ProfileForm = ({ nextStep, userId }) => {
                 name="firstName"
                 value={profileData.firstName}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border-[#591B0C] border-2 focus:border-[#ff3003] outline-none"
+                className="mt-1 block h-9 w-full border-[#591B0C] border-2 focus:border-[#ff3003] outline-none"
                 required
               />
               {errors.firstName && <p className="text-sm text-red-600">{errors.firstName}</p>}
@@ -161,7 +161,7 @@ const ProfileForm = ({ nextStep, userId }) => {
                 type="email"
                 name="email"
                 value={profileData.email}
-                className="mt-1 block w-full border-[#591B0C] border-2 bg-gray-200 cursor-not-allowed  focus:border-[#ff3003] outline-none"
+                className="mt-1 block w-full h-9 border-[#591B0C] border-2 bg-gray-200 cursor-not-allowed  focus:border-[#ff3003] outline-none"
                 readOnly
               />
             </div>
@@ -175,7 +175,7 @@ const ProfileForm = ({ nextStep, userId }) => {
                 name="phone"
                 value={profileData.phone}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border-[#591B0C] border-2  focus:border-[#ff3003] outline-none"
+                className="mt-1 block w-full h-9 border-[#591B0C] border-2  focus:border-[#ff3003] outline-none"
                 required
               />
               {errors.phone && <p className="text-sm text-red-600 ">{errors.phone}</p>}
@@ -190,7 +190,7 @@ const ProfileForm = ({ nextStep, userId }) => {
                 name="dateOfBirth"
                 value={profileData.dateOfBirth}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border-[#591B0C] border-2   focus:border-[#ff3003] outline-none"
+                className="mt-1 block w-full h-9 border-[#591B0C] border-2   focus:border-[#ff3003] outline-none"
                 required
               />
             </div>
@@ -203,7 +203,7 @@ const ProfileForm = ({ nextStep, userId }) => {
                 name="gender"
                 value={profileData.gender}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border-[#591B0C] text-sm border-2 py-1 focus:border-[#ff3003] outline-none"
+                className="mt-1 block w-full h-9 border-[#591B0C] text-sm border-2 py-1 focus:border-[#ff3003] outline-none"
                 required
               >
                 <option value="">Select Gender</option>
@@ -244,7 +244,7 @@ const ProfileForm = ({ nextStep, userId }) => {
                 name="city"
                 value={profileData.city}
                 onChange={handleInputChange}
-                className="mt-1 block w-full border-[#591B0C] border-2 focus:border-[#ff3003] outline-none"
+                className="mt-1 block w-full h-9 border-[#591B0C] border-2 focus:border-[#ff3003] outline-none"
                 required
               />
               {errors.firstName && <p className="text-sm text-red-600">{errors.firstName}</p>}
