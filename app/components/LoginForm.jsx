@@ -38,12 +38,12 @@ const LoginForm = () => {
         router.push("/")
       } else {
        
-        Error("Login failed. Please try again.");
+      //  Error("Login failed. Please try again.");
         setError(data.error || "Login failed. Please try again.")
       }
     } catch (error) {
       
-      Error("An error occurred. Please try again.");
+     // Error("An error occurred. Please try again.");
        
       setError("An error occurred. Please try again.")
     } finally {
@@ -98,12 +98,20 @@ const LoginForm = () => {
           >
             {isLoading ? "Signing in..." : "Sign in"}
           </button>
-          <p className="mt-4 text-sm text-gray-600">
+<div className="flex flex-col md:flex-row lg:flex-row gap-2 mt-4">
+          <p className="text-sm text-gray-600">
     Don't have an account?  
     <a href="/register" className="text-blue-600 hover:underline ml-1">
       Sign up here
     </a>
   </p>
+  <p className="text-sm text-gray-600">
+   Forgot your password? 
+    <a href="/forgot-password" className="text-blue-600 hover:underline ml-1">
+      Reset it here
+    </a>
+  </p>
+  </div>
         </div>
       </form>
     </div>

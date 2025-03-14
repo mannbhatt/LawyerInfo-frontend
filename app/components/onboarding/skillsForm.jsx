@@ -93,20 +93,20 @@ const SkillsForm = ({ nextStep, thisStep, skipStep, userId }) => {
         <Code className="w-4 h-4 mr-2 text-[#591B0C]" />
         Enter Your Skills
       </label>
-      <div className="flex w-full items-center justify-between mt-1 mb-6">
+      <div className="flex w-full items-center justify-between mt-1 mb-6 gap-4">
         <input
           type="text"
           value={skill}
           onChange={handleInputChange}
-          className="w-[84%]  h-9 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] outline-none sm:text-sm"
+          className=" w-full  h-9 border-[#591B0C] border-2 shadow-sm focus:border-[#ff3003] outline-none sm:text-sm"
           
         />
         <button
           type="button"
           onClick={addSkill}
-          className="px-6 py-2 border border-[#591B0C] text-[#591B0C] rounded-md hover:bg-[#ffefdb] transition-colors duration-300"
+          className="px-6  border-2 h-9 border-[#591B0C] text-[#591B0C]  hover:bg-[#ffefdb] transition-colors duration-300"
         >
-        Add Skill
+        Add
         </button>
       </div>
       {errors && <p className="text-red-600 mb-4">{errors}</p>}
@@ -122,7 +122,7 @@ const SkillsForm = ({ nextStep, thisStep, skipStep, userId }) => {
         ))}
       </ul>
 
-      <div className="flex justify-between mt-8">
+      <div className="flex justify-between mt-4">
         <button
           type="button"
           onClick={skipStep}

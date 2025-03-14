@@ -11,7 +11,7 @@ import SocialLinksForm from "../components/onboarding/socialLinksForm";
 import { jwtDecode } from "jwt-decode";
 
 export default function Details() {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(4);
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {

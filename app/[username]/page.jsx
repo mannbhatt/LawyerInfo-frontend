@@ -236,7 +236,7 @@ export default function ProfilePage() {
       <div className="relative h-48 md:h-48 bg-gradient-to-r from-[#591B0C] to-[#3d1208] overflow-hidden">
         {/* Optional: Add a cover photo if available */}
         {profile?.coverImage && (
-          <Image src={profile.coverImage || "/placeholder.svg"} alt="Cover" fill className="object-cover opacity-30" />
+          <Image src={profile.coverImage || "https://i.sstatic.net/jGlzr.png"} alt="Cover" fill className="object-cover opacity-30" />
         )}
       </div>
 

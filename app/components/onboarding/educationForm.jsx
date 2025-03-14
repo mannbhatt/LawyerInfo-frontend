@@ -342,7 +342,7 @@ const EducationForm = ({ nextStep, skipStep, userId }) => {
           {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description}</p>}
         </div>
 
-        <div className="flex justify-between mt-8">
+        <div className="flex justify-between mt-8 pr-4">
           <button
             type="button"
             onClick={skipStep}

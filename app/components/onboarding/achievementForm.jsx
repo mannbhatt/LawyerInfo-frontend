@@ -90,8 +90,9 @@ const AchievementForm = ({ nextStep, thisStep, skipStep, userId }) => {
             credential_url: "",
             certificate_image: "",
             imageKey:"",
-            uploadedImage:"",
-          });
+            });
+            setUploadedImage("")
+            setImageKey("")
           thisStep();
         }
       } else {
@@ -123,7 +124,7 @@ const AchievementForm = ({ nextStep, thisStep, skipStep, userId }) => {
               <label className="flex text-sm   font-medium text-gray-700  items-center">
                 <Building size={16} className="h-5 w-5 mr-2 text-[#591B0C]" /> Profile Image
               </label>
-              <Imgupload onUploadComplete={setUploadedImage} onImageKeyChange={setImageKey}/>
+              <Imgupload onUploadComplete={setUploadedImage} onImageKeyChange={setImageKey} initialImage={uploadedImage} initialImageKey={imageKey}/>
               {imageUploadWarning && <p className="text-sm text-red-600">{imageUploadWarning}</p>}
             </div>
         <div className="flex flex-col justify-between">
@@ -187,7 +188,7 @@ const AchievementForm = ({ nextStep, thisStep, skipStep, userId }) => {
          
           </div>
         
-        <div className="flex justify-between">
+        <div className="flex justify-between gap-2">
           <button
             type="button"
             onClick={skipStep}
@@ -195,7 +196,7 @@ const AchievementForm = ({ nextStep, thisStep, skipStep, userId }) => {
           >
             Skip
           </button>
-          <div className="flex justify-between gap-4">
+          <div className="flex justify-between gap-2">
             <button 
               type="button" 
               onClick={() => submitCertificationData(false)}
