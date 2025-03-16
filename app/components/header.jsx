@@ -8,9 +8,10 @@ import { Menu, X, ChevronDown, User, LogOut } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
 const NAVBAR_ITEMS = [
-  { label: "FAQs", href: "#faqs" },
-  { label: "How it works", href: "#howitworks" },
-  { label: "About us", href: "#aboutus" },
+  { label: "Home", href: "/" },
+  { label: "How it works", href: "/#howitworks" },
+  { label: "FAQs", href: "/#faqs" },
+  
 ]
 
 export default function Header() {
@@ -104,6 +105,7 @@ setTimeout(() =>{window.location.reload();
 
         <div className="flex items-center gap-2 sm:gap-4 lg:gap-6">
           <div className="hidden lg:flex text-base sm:text-lg gap-4 sm:gap-8">
+          
             {NAVBAR_ITEMS.map((item) => (
               <Link
                 key={item.label}
@@ -114,12 +116,7 @@ setTimeout(() =>{window.location.reload();
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-full"></span>
               </Link>
             ))}
-            {user && (
-              <Link href="/dashboard/profiles" className="text-white font-medium relative group whitespace-nowrap">
-                Profiles
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-            )}
+           
           </div>
 
           <div className="hidden lg:flex text-base sm:text-lg gap-4 sm:gap-6">
@@ -163,6 +160,7 @@ setTimeout(() =>{window.location.reload();
             className="lg:hidden bg-primary border-t border-primary-light"
           >
             <div className="p-4 space-y-3">
+            
               {NAVBAR_ITEMS.map((item) => (
                 <Link
                   key={item.label}
@@ -174,15 +172,7 @@ setTimeout(() =>{window.location.reload();
                 </Link>
               ))}
 
-              {user && (
-                <Link
-                  href="/dashboard/profiles"
-                  className="block py-2 text-white font-medium hover:text-secondary transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Profiles
-                </Link>
-              )}
+              
 
               <div className="pt-3 border-t border-primary-light">
                 {user ? (

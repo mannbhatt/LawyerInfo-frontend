@@ -18,6 +18,14 @@ const RegisterForm = () => {
   const validateForm = () => {
     let newErrors = {};
     
+    if (!username) {
+      newErrors.username = "Username is required.";
+    } else if (username.length < 3 || username.length > 30) {
+      newErrors.username = "Username must be between 3 and 30 characters long.";
+    } else if (!/^[a-z0-9_.-]+$/.test(username)) {
+      newErrors.username = "Username can only contain lowercase letters, numbers, underscores, dots, and hyphens.";
+    }
+
     if (password !== confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match!";
     }
@@ -26,10 +34,9 @@ const RegisterForm = () => {
       newErrors.password = "Password must be at least 6 characters long.";
     }
 
-    if (!username) {
-      newErrors.username = "Username is required.";
-    }
-
+   
+  
+  
     if (!email) {
       newErrors.email = "Email is required.";
     }

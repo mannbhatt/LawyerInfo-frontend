@@ -22,7 +22,8 @@ import ContributionEditForm from "../components/dashboard/editprofile/Contributi
 import ProfileSection from "../components/dashboard/viewprofile/ProfileSection"
 import ProfileView from "../components/dashboard/viewprofile/profileView"
 import ProfileEditForm from "../components/dashboard/editprofile/ProfileEditForm"
-
+import UsernameView from "../components/dashboard/viewprofile/UsernameView"
+import UsernameEditForm from "../components/dashboard/editprofile/UsernameEditForm"
 export default function ProfilePage() {
   const { username } = useParams()
   const router = useRouter()
@@ -195,7 +196,21 @@ export default function ProfilePage() {
       alert(error.message)
     }
   }
+  const handleUsernameUpdate = async (newUsername) => {
+    try {
+      // Update the user state with the new username
+      setUser((prev) => ({ ...prev, username: newUsername }))
 
+      // Close edit mode for username
+      setEditMode((prev) => ({ ...prev, username: false }))
+
+      // Redirect to the new profile URL
+      router.push(`/${newUsername}`)
+    } catch (error) {
+      console.error("Error updating username:", error)
+      alert(error.message)
+    }
+  }
   const toggleEditMode = (section) => {
     if (!isOwnProfile) return
     setEditMode((prev) => ({ ...prev, [section]: !prev[section] }))
@@ -318,6 +333,15 @@ export default function ProfilePage() {
 
           {/* Sidebar */}
           <div className="space-y-8">
+          {isOwnProfile && (
+  <ProfileSection
+    title="Username"
+    editMode={editMode.username}
+    onToggleEdit={() => toggleEditMode("username")}
+    ViewComponent={<UsernameView user={user} />}
+    EditComponent={<UsernameEditForm user={user} onSave={handleUsernameUpdate} />}
+  />
+)}
             {/* Skills Section */}
             <ProfileSection
               title="Skills & Expertise"
