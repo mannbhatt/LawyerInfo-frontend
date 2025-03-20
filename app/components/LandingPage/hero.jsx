@@ -34,7 +34,7 @@ export default function HeroSection() {
     }
   }, [showResults, results.length])
 
-  const handleSearch = async () => {
+ /* const handleSearch = async () => {
     if (!searchQuery.trim() && !city.trim()) {
       setError("Please enter a name or location to search.")
       return
@@ -83,7 +83,56 @@ export default function HeroSection() {
       setLoading(false)
     }
   }
+*/
+  const handleSearch = async () => {
+  if (!searchQuery.trim() && !city.trim()) {
+    setError("Please enter a full name or location to search.");
+    return;
+  }
 
+  setError("");
+  setLoading(true);
+  setShowResults(true);
+  setResultsExpanded(true);
+  setVisibleResults(6);
+
+  try {
+    // Build the query string properly, only including parameters that have values
+    const queryParams = [];
+    if (searchQuery.trim()) {
+      queryParams.push(`fullName=${encodeURIComponent(searchQuery.trim())}`); // FIXED: Changed `username` to `fullName`
+    }
+    if (city.trim()) {
+      queryParams.push(`city=${encodeURIComponent(city.trim())}`);
+    }
+
+    const queryString = queryParams.join("&");
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/searchdata/search?${queryString}`;
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || `Server responded with status: ${response.status}`);
+    }
+
+    if (data.success) {
+      setResults(data.users);
+      if (data.users.length === 0) {
+        setError("No profiles found matching your search criteria.");
+      }
+    } else {
+      setError(data.message || "Search failed. Please try again.");
+      setResults([]);
+    }
+  } catch (error) {
+    console.error("Error fetching search results:", error);
+    setError("An error occurred while searching. Please try again later.");
+    setResults([]);
+  } finally {
+    setLoading(false);
+  }
+};
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       handleSearch()
